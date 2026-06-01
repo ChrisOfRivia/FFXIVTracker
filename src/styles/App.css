@@ -69,19 +69,35 @@ html:has(.page-shell-achievements)::-webkit-scrollbar {
 }
 
 html:has(.page-shell-mounts)::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(18, 18, 18, 0.96) 0%, rgba(12, 12, 12, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 18, 18, 0.96) 0%,
+    rgba(12, 12, 12, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-minions)::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(26, 18, 15, 0.96) 0%, rgba(17, 12, 10, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 18, 15, 0.96) 0%,
+    rgba(17, 12, 10, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-achievements)::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(31, 9, 7, 0.96) 0%, rgba(18, 6, 5, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(31, 9, 7, 0.96) 0%,
+    rgba(18, 6, 5, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-home)::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(24, 18, 31, 0.96) 0%, rgba(15, 11, 21, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(24, 18, 31, 0.96) 0%,
+    rgba(15, 11, 21, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-mounts)::-webkit-scrollbar-thumb,
@@ -93,35 +109,67 @@ html:has(.page-shell-achievements)::-webkit-scrollbar-thumb {
 }
 
 html:has(.page-shell-mounts)::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.82) 0%, rgba(88, 132, 186, 0.9) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.82) 0%,
+    rgba(88, 132, 186, 0.9) 100%
+  );
 }
 
 html:has(.page-shell-minions)::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(214, 151, 90, 0.84) 0%, rgba(126, 82, 45, 0.92) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(214, 151, 90, 0.84) 0%,
+    rgba(126, 82, 45, 0.92) 100%
+  );
 }
 
 html:has(.page-shell-achievements)::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(229, 182, 83, 0.88) 0%, rgba(137, 32, 22, 0.94) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(229, 182, 83, 0.88) 0%,
+    rgba(137, 32, 22, 0.94) 100%
+  );
 }
 
 html:has(.page-shell-home)::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(187, 163, 247, 0.84) 0%, rgba(118, 90, 171, 0.92) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(187, 163, 247, 0.84) 0%,
+    rgba(118, 90, 171, 0.92) 100%
+  );
 }
 
 html:has(.page-shell-mounts)::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(160, 216, 255, 0.92) 0%, rgba(103, 150, 206, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(160, 216, 255, 0.92) 0%,
+    rgba(103, 150, 206, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-minions)::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(228, 168, 108, 0.92) 0%, rgba(146, 95, 54, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(228, 168, 108, 0.92) 0%,
+    rgba(146, 95, 54, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-achievements)::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(248, 214, 137, 0.96) 0%, rgba(166, 44, 29, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(248, 214, 137, 0.96) 0%,
+    rgba(166, 44, 29, 0.98) 100%
+  );
 }
 
 html:has(.page-shell-home)::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(208, 189, 255, 0.92) 0%, rgba(137, 110, 193, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(208, 189, 255, 0.92) 0%,
+    rgba(137, 110, 193, 0.98) 100%
+  );
 }
 
 .app-route-shell {
@@ -136,7 +184,12 @@ html:has(.page-shell-home)::-webkit-scrollbar-thumb:hover {
   justify-content: center;
   gap: var(--gap-2xs);
   padding: var(--space-sm) var(--shell-space) 0;
-  background: linear-gradient(180deg, rgba(20, 20, 20, 0.94) 0%, rgba(20, 20, 20, 0.64) 75%, rgba(20, 20, 20, 0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(20, 20, 20, 0.94) 0%,
+    rgba(20, 20, 20, 0.64) 75%,
+    rgba(20, 20, 20, 0) 100%
+  );
   backdrop-filter: blur(10px);
 }
 
@@ -154,7 +207,11 @@ html:has(.page-shell-home)::-webkit-scrollbar-thumb:hover {
   letter-spacing: 0.05em;
   text-decoration: none;
   text-transform: uppercase;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .collection-nav-link:hover {
@@ -170,19 +227,39 @@ html:has(.page-shell-home)::-webkit-scrollbar-thumb:hover {
 }
 
 html:has(.page-shell-mounts) .collection-nav {
-  background: linear-gradient(180deg, rgba(18, 26, 40, 0.96) 0%, rgba(18, 26, 40, 0.68) 75%, rgba(18, 26, 40, 0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 26, 40, 0.96) 0%,
+    rgba(18, 26, 40, 0.68) 75%,
+    rgba(18, 26, 40, 0) 100%
+  );
 }
 
 html:has(.page-shell-minions) .collection-nav {
-  background: linear-gradient(180deg, rgba(31, 21, 15, 0.96) 0%, rgba(31, 21, 15, 0.68) 75%, rgba(31, 21, 15, 0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(31, 21, 15, 0.96) 0%,
+    rgba(31, 21, 15, 0.68) 75%,
+    rgba(31, 21, 15, 0) 100%
+  );
 }
 
 html:has(.page-shell-achievements) .collection-nav {
-  background: linear-gradient(180deg, rgba(37, 10, 8, 0.96) 0%, rgba(37, 10, 8, 0.68) 75%, rgba(37, 10, 8, 0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(37, 10, 8, 0.96) 0%,
+    rgba(37, 10, 8, 0.68) 75%,
+    rgba(37, 10, 8, 0) 100%
+  );
 }
 
 html:has(.page-shell-home) .collection-nav {
-  background: linear-gradient(180deg, rgba(24, 18, 31, 0.96) 0%, rgba(24, 18, 31, 0.68) 75%, rgba(24, 18, 31, 0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(24, 18, 31, 0.96) 0%,
+    rgba(24, 18, 31, 0.68) 75%,
+    rgba(24, 18, 31, 0) 100%
+  );
 }
 
 html:has(.page-shell-mounts) .collection-nav-link {
@@ -198,8 +275,8 @@ html:has(.page-shell-minions) .collection-nav-link {
 }
 
 html:has(.page-shell-achievements) .collection-nav-link {
-  background: rgba(229, 182, 83, 0.06);
-  border-color: rgba(229, 182, 83, 0.16);
+  background: rgba(137, 32, 22, 0.28);
+  border-color: rgba(248, 214, 137, 0.2);
   color: #ffe9b1;
 }
 
@@ -220,8 +297,8 @@ html:has(.page-shell-minions) .collection-nav-link:hover {
 }
 
 html:has(.page-shell-achievements) .collection-nav-link:hover {
-  background: rgba(229, 182, 83, 0.13);
-  border-color: rgba(248, 214, 137, 0.3);
+  background: rgba(166, 44, 29, 0.42);
+  border-color: rgba(248, 214, 137, 0.32);
 }
 
 html:has(.page-shell-home) .collection-nav-link:hover {
@@ -230,25 +307,47 @@ html:has(.page-shell-home) .collection-nav-link:hover {
 }
 
 html:has(.page-shell-mounts) .collection-nav-link.active {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.96) 0%, rgba(74, 118, 177, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.96) 0%,
+    rgba(74, 118, 177, 0.98) 100%
+  );
   border-color: rgba(190, 226, 255, 0.42);
   color: #0f1720;
 }
 
 html:has(.page-shell-minions) .collection-nav-link.active {
-  background: linear-gradient(180deg, rgba(243, 195, 108, 0.96) 0%, rgba(214, 151, 90, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(243, 195, 108, 0.96) 0%,
+    rgba(214, 151, 90, 0.98) 100%
+  );
   border-color: rgba(255, 232, 181, 0.36);
   color: #24160f;
 }
 
 html:has(.page-shell-achievements) .collection-nav-link.active {
-  background: linear-gradient(180deg, rgba(248, 214, 137, 0.98) 0%, rgba(177, 44, 31, 0.98) 100%);
-  border-color: rgba(255, 237, 176, 0.46);
-  color: #220705;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.18) 0%,
+      rgba(255, 224, 142, 0) 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(188, 45, 32, 0.98) 0%,
+      rgba(112, 20, 15, 0.99) 100%
+    );
+  border-color: rgba(255, 237, 176, 0.42);
+  color: #fff0bf;
 }
 
 html:has(.page-shell-home) .collection-nav-link.active {
-  background: linear-gradient(180deg, rgba(208, 189, 255, 0.96) 0%, rgba(137, 110, 193, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(208, 189, 255, 0.96) 0%,
+    rgba(137, 110, 193, 0.98) 100%
+  );
   border-color: rgba(236, 225, 255, 0.42);
   color: #1a1324;
 }
@@ -261,8 +360,16 @@ html:has(.page-shell-home) .collection-nav-link.active {
   justify-content: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at top left, rgba(187, 163, 247, 0.14) 0%, rgba(187, 163, 247, 0) 28%),
-    radial-gradient(circle at bottom right, rgba(139, 198, 255, 0.08) 0%, rgba(139, 198, 255, 0) 20%),
+    radial-gradient(
+      circle at top left,
+      rgba(187, 163, 247, 0.14) 0%,
+      rgba(187, 163, 247, 0) 28%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(139, 198, 255, 0.08) 0%,
+      rgba(139, 198, 255, 0) 20%
+    ),
     linear-gradient(180deg, #17111f 0%, #0f0b12 100%);
 }
 
@@ -272,9 +379,24 @@ html:has(.page-shell-home) .collection-nav-link.active {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.016) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.016) 50%, rgba(255, 255, 255, 0.016) 75%, transparent 75%, transparent);
-  background-size: 24px 24px, 60px 60px;
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 0
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.016) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.016) 50%,
+      rgba(255, 255, 255, 0.016) 75%,
+      transparent 75%,
+      transparent
+    );
+  background-size:
+    24px 24px,
+    60px 60px;
   opacity: 0.22;
 }
 
@@ -285,8 +407,16 @@ html:has(.page-shell-home) .collection-nav-link.active {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--panel-radius-xl);
   background:
-    radial-gradient(circle at top right, rgba(139, 198, 255, 0.08) 0%, rgba(139, 198, 255, 0) 30%),
-    linear-gradient(180deg, rgba(30, 24, 39, 0.98) 0%, rgba(18, 14, 24, 0.98) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(139, 198, 255, 0.08) 0%,
+      rgba(139, 198, 255, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(30, 24, 39, 0.98) 0%,
+      rgba(18, 14, 24, 0.98) 100%
+    );
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
 }
 
@@ -332,7 +462,10 @@ html:has(.page-shell-home) .collection-nav-link.active {
   text-decoration: none;
   color: inherit;
   overflow: hidden;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .home-route-card::before {
@@ -345,32 +478,68 @@ html:has(.page-shell-home) .collection-nav-link.active {
 
 .home-route-card-mounts {
   background:
-    radial-gradient(circle at top right, rgba(139, 198, 255, 0.12) 0%, rgba(139, 198, 255, 0) 32%),
-    linear-gradient(180deg, rgba(32, 42, 58, 0.98) 0%, rgba(18, 23, 32, 0.98) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(139, 198, 255, 0.12) 0%,
+      rgba(139, 198, 255, 0) 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(32, 42, 58, 0.98) 0%,
+      rgba(18, 23, 32, 0.98) 100%
+    );
 }
 
 .home-route-card-mounts::before {
-  background: radial-gradient(circle at top right, rgba(139, 198, 255, 0.12) 0%, rgba(139, 198, 255, 0) 55%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(139, 198, 255, 0.12) 0%,
+    rgba(139, 198, 255, 0) 55%
+  );
 }
 
 .home-route-card-minions {
   background:
-    radial-gradient(circle at top right, rgba(243, 195, 108, 0.12) 0%, rgba(243, 195, 108, 0) 32%),
-    linear-gradient(180deg, rgba(52, 31, 22, 0.98) 0%, rgba(26, 18, 14, 0.98) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(243, 195, 108, 0.12) 0%,
+      rgba(243, 195, 108, 0) 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(52, 31, 22, 0.98) 0%,
+      rgba(26, 18, 14, 0.98) 100%
+    );
 }
 
 .home-route-card-minions::before {
-  background: radial-gradient(circle at top right, rgba(243, 195, 108, 0.14) 0%, rgba(243, 195, 108, 0) 55%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(243, 195, 108, 0.14) 0%,
+    rgba(243, 195, 108, 0) 55%
+  );
 }
 
 .home-route-card-achievements {
   background:
-    radial-gradient(circle at top right, rgba(248, 214, 137, 0.14) 0%, rgba(248, 214, 137, 0) 32%),
-    linear-gradient(180deg, rgba(78, 18, 13, 0.98) 0%, rgba(30, 8, 7, 0.98) 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(248, 214, 137, 0.14) 0%,
+      rgba(248, 214, 137, 0) 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(78, 18, 13, 0.98) 0%,
+      rgba(30, 8, 7, 0.98) 100%
+    );
 }
 
 .home-route-card-achievements::before {
-  background: radial-gradient(circle at top right, rgba(229, 182, 83, 0.16) 0%, rgba(229, 182, 83, 0) 55%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(229, 182, 83, 0.16) 0%,
+    rgba(229, 182, 83, 0) 55%
+  );
 }
 
 .home-route-card:hover {
@@ -454,8 +623,11 @@ html:has(.page-shell-home) .collection-nav-link.active {
   padding: var(--panel-padding);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--panel-radius-lg);
-  background:
-    linear-gradient(180deg, rgba(47, 47, 47, 0.96) 0%, rgba(28, 28, 28, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(47, 47, 47, 0.96) 0%,
+    rgba(28, 28, 28, 0.98) 100%
+  );
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
   text-align: left;
 }
@@ -490,7 +662,9 @@ html:has(.page-shell-home) .collection-nav-link.active {
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 700;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .project-notice-button:hover {
@@ -522,8 +696,6 @@ html:has(.page-shell-home) .collection-nav-link.active {
   backdrop-filter: blur(10px);
 }
 
-
-
 .character-sync-card {
   position: relative;
   width: min(calc(860px * var(--ui-scale)), 100%);
@@ -533,8 +705,16 @@ html:has(.page-shell-home) .collection-nav-link.active {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--panel-radius-xl);
   background:
-    radial-gradient(circle at top left, rgba(102, 168, 255, 0.14) 0%, rgba(102, 168, 255, 0) 32%),
-    linear-gradient(180deg, rgba(41, 41, 41, 0.98) 0%, rgba(24, 24, 24, 0.99) 100%);
+    radial-gradient(
+      circle at top left,
+      rgba(102, 168, 255, 0.14) 0%,
+      rgba(102, 168, 255, 0) 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(41, 41, 41, 0.98) 0%,
+      rgba(24, 24, 24, 0.99) 100%
+    );
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
 }
 
@@ -681,7 +861,10 @@ html:has(.page-shell-home) .collection-nav-link.active {
   cursor: pointer;
   font: inherit;
   font-weight: 700;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .character-sync-button,
@@ -693,14 +876,22 @@ html:has(.page-shell-home) .collection-nav-link.active {
 
 html:has(.page-shell-mounts) .character-sync-button,
 html:has(.page-shell-mounts) .character-launch-button {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.95) 0%, rgba(74, 118, 177, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.95) 0%,
+    rgba(74, 118, 177, 0.98) 100%
+  );
   border-color: rgba(190, 226, 255, 0.42);
   color: #0f1720;
 }
 
 .page-shell-mounts .character-sync-button,
 .page-shell-mounts .character-launch-button {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.95) 0%, rgba(74, 118, 177, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.95) 0%,
+    rgba(74, 118, 177, 0.98) 100%
+  );
   border-color: rgba(190, 226, 255, 0.42);
   color: #0f1720;
 }
@@ -800,7 +991,11 @@ html:has(.page-shell-minions) .character-launch-button {
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .character-summary-change-button:hover {
@@ -829,7 +1024,12 @@ html:has(.page-shell-minions) .character-launch-button {
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .character-summary-action-refresh {
@@ -839,19 +1039,31 @@ html:has(.page-shell-minions) .character-launch-button {
 }
 
 html:has(.page-shell-mounts) .character-summary-action-refresh {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.95) 0%, rgba(74, 118, 177, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.95) 0%,
+    rgba(74, 118, 177, 0.98) 100%
+  );
   border-color: rgba(190, 226, 255, 0.42);
   color: #0f1720;
 }
 
 .page-shell-mounts .character-summary-action-refresh {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.95) 0%, rgba(74, 118, 177, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.95) 0%,
+    rgba(74, 118, 177, 0.98) 100%
+  );
   border-color: rgba(190, 226, 255, 0.42);
   color: #0f1720;
 }
 
 .page-shell-mounts .character-summary-action-refresh:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(160, 216, 255, 0.98) 0%, rgba(88, 132, 186, 1) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(160, 216, 255, 0.98) 0%,
+    rgba(88, 132, 186, 1) 100%
+  );
   border-color: rgba(207, 235, 255, 0.5);
   color: #08111b;
 }
@@ -860,6 +1072,22 @@ html:has(.page-shell-minions) .character-summary-action-refresh {
   background: linear-gradient(180deg, #f1c36c 0%, #d59e42 100%);
   border-color: rgba(255, 232, 181, 0.35);
   color: #1f1710;
+}
+
+html:has(.page-shell-achievements) .character-summary-action-refresh {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.16) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(177, 44, 31, 0.96) 0%,
+      rgba(98, 18, 13, 0.98) 100%
+    );
+  border-color: rgba(255, 237, 176, 0.36);
+  color: #fff0bf;
 }
 
 .character-summary-action-danger {
@@ -897,6 +1125,23 @@ html:has(.page-shell-minions) .character-summary-action-refresh {
 .character-summary-action-refresh:hover:not(:disabled) {
   background: linear-gradient(180deg, #f7d38a 0%, #e0ad55 100%);
   border-color: rgba(255, 238, 197, 0.42);
+}
+
+html:has(.page-shell-achievements)
+  .character-summary-action-refresh:hover:not(:disabled) {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.2) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(197, 54, 38, 0.98) 0%,
+      rgba(116, 24, 17, 1) 100%
+    );
+  border-color: rgba(255, 237, 176, 0.48);
+  color: #fff6d7;
 }
 
 .character-summary-action:disabled {
@@ -1001,6 +1246,216 @@ html:has(.page-shell-minions) .character-summary-action-refresh {
   font-size: 0.8rem;
 }
 
+html:has(.page-shell-mounts) .character-sync-overlay {
+  background: rgba(4, 9, 16, 0.76);
+}
+
+html:has(.page-shell-mounts) .character-sync-card {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(139, 198, 255, 0.2) 0%,
+      rgba(139, 198, 255, 0) 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(30, 39, 54, 0.98) 0%,
+      rgba(14, 18, 27, 0.99) 100%
+    );
+  border-color: rgba(139, 198, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(200, 230, 255, 0.06),
+    0 30px 80px rgba(0, 0, 0, 0.46);
+}
+
+html:has(.page-shell-mounts) .character-sync-eyebrow,
+html:has(.page-shell-mounts) .character-sync-field span,
+html:has(.page-shell-mounts) .character-result-copy span {
+  color: #9fd0ff;
+}
+
+html:has(.page-shell-mounts) .character-sync-copy,
+html:has(.page-shell-mounts) .character-result-copy p {
+  color: #d8e8f7;
+}
+
+html:has(.page-shell-mounts) .character-sync-close,
+html:has(.page-shell-mounts) .character-sync-field input,
+html:has(.page-shell-mounts) .character-sync-field select,
+html:has(.page-shell-mounts) .character-result-card {
+  background: rgba(139, 198, 255, 0.06);
+  border-color: rgba(139, 198, 255, 0.16);
+}
+
+html:has(.page-shell-mounts) .character-sync-field input:focus,
+html:has(.page-shell-mounts) .character-sync-field select:focus {
+  border-color: rgba(139, 198, 255, 0.34);
+  box-shadow: 0 0 0 3px rgba(139, 198, 255, 0.1);
+  outline: none;
+}
+
+html:has(.page-shell-mounts) .character-sync-field input::placeholder {
+  color: #8aa8c7;
+}
+
+html:has(.page-shell-mounts) .character-sync-close:hover {
+  background: rgba(139, 198, 255, 0.12);
+  border-color: rgba(139, 198, 255, 0.28);
+}
+
+html:has(.page-shell-mounts) .character-sync-warning {
+  background: rgba(139, 198, 255, 0.08);
+  border-color: rgba(139, 198, 255, 0.18);
+  color: #d9ebff;
+}
+
+html:has(.page-shell-mounts) .character-sync-warning a {
+  color: #a8d9ff;
+}
+
+html:has(.page-shell-mounts) .character-sync-warning a::after {
+  background: #a8d9ff;
+}
+
+html:has(.page-shell-minions) .character-sync-overlay {
+  background: rgba(18, 11, 7, 0.76);
+}
+
+html:has(.page-shell-minions) .character-sync-card {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(241, 195, 108, 0.16) 0%,
+      rgba(241, 195, 108, 0) 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(54, 34, 22, 0.98) 0%,
+      rgba(22, 14, 10, 0.99) 100%
+    );
+  border-color: rgba(255, 232, 181, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 181, 0.06),
+    0 30px 80px rgba(0, 0, 0, 0.46);
+}
+
+html:has(.page-shell-minions) .character-sync-eyebrow,
+html:has(.page-shell-minions) .character-sync-field span,
+html:has(.page-shell-minions) .character-result-copy span {
+  color: #f1d9be;
+}
+
+html:has(.page-shell-minions) .character-sync-copy,
+html:has(.page-shell-minions) .character-result-copy p {
+  color: #d8c0ac;
+}
+
+html:has(.page-shell-minions) .character-sync-close,
+html:has(.page-shell-minions) .character-sync-field input,
+html:has(.page-shell-minions) .character-sync-field select,
+html:has(.page-shell-minions) .character-result-card {
+  background: rgba(255, 232, 181, 0.06);
+  border-color: rgba(255, 232, 181, 0.14);
+}
+
+html:has(.page-shell-minions) .character-sync-field input:focus,
+html:has(.page-shell-minions) .character-sync-field select:focus {
+  border-color: rgba(255, 232, 181, 0.32);
+  box-shadow: 0 0 0 3px rgba(241, 195, 108, 0.1);
+  outline: none;
+}
+
+html:has(.page-shell-minions) .character-sync-field input::placeholder {
+  color: #aa876a;
+}
+
+html:has(.page-shell-minions) .character-sync-close:hover {
+  background: rgba(255, 232, 181, 0.11);
+  border-color: rgba(255, 232, 181, 0.26);
+}
+
+html:has(.page-shell-minions) .character-sync-warning {
+  background: rgba(241, 195, 108, 0.1);
+  border-color: rgba(255, 232, 181, 0.2);
+  color: #f3ddb0;
+}
+
+html:has(.page-shell-achievements) .character-sync-overlay {
+  background: rgba(18, 4, 3, 0.78);
+}
+
+html:has(.page-shell-achievements) .character-sync-card {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(188, 45, 32, 0.24) 0%,
+      rgba(188, 45, 32, 0) 34%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(255, 224, 142, 0.1) 0%,
+      rgba(255, 224, 142, 0) 25%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(72, 16, 12, 0.98) 0%,
+      rgba(24, 6, 5, 0.99) 100%
+    );
+  border-color: rgba(248, 214, 137, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 224, 142, 0.08),
+    0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+html:has(.page-shell-achievements) .character-sync-eyebrow,
+html:has(.page-shell-achievements) .character-sync-field span,
+html:has(.page-shell-achievements) .character-result-copy span {
+  color: #f5d998;
+}
+
+html:has(.page-shell-achievements) .character-sync-copy,
+html:has(.page-shell-achievements) .character-result-copy p {
+  color: #f1d9be;
+}
+
+html:has(.page-shell-achievements) .character-sync-close,
+html:has(.page-shell-achievements) .character-sync-field input,
+html:has(.page-shell-achievements) .character-sync-field select,
+html:has(.page-shell-achievements) .character-result-card {
+  background: rgba(137, 32, 22, 0.24);
+  border-color: rgba(248, 214, 137, 0.14);
+}
+
+html:has(.page-shell-achievements) .character-sync-field input:focus,
+html:has(.page-shell-achievements) .character-sync-field select:focus {
+  border-color: rgba(248, 214, 137, 0.34);
+  box-shadow: 0 0 0 3px rgba(229, 182, 83, 0.12);
+  outline: none;
+}
+
+html:has(.page-shell-achievements) .character-sync-field input::placeholder {
+  color: #c79864;
+}
+
+html:has(.page-shell-achievements) .character-sync-close:hover {
+  background: rgba(166, 44, 29, 0.38);
+  border-color: rgba(248, 214, 137, 0.28);
+}
+
+html:has(.page-shell-achievements) .character-sync-warning {
+  background: rgba(248, 214, 137, 0.1);
+  border-color: rgba(248, 214, 137, 0.22);
+  color: #f8d998;
+}
+
+html:has(.page-shell-achievements) .character-sync-warning a {
+  color: #ffe6a8;
+}
+
+html:has(.page-shell-achievements) .character-sync-warning a::after {
+  background: #ffe6a8;
+}
+
 .mount-detail-card {
   position: relative;
   width: min(calc(920px * var(--ui-scale)), 100%);
@@ -1010,17 +1465,37 @@ html:has(.page-shell-minions) .character-summary-action-refresh {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--panel-radius-xl);
   background:
-    radial-gradient(circle at top left, rgba(215, 185, 120, 0.16) 0%, rgba(215, 185, 120, 0) 30%),
-    linear-gradient(180deg, rgba(46, 46, 46, 0.98) 0%, rgba(28, 28, 28, 0.99) 100%);
+    radial-gradient(
+      circle at top left,
+      rgba(215, 185, 120, 0.16) 0%,
+      rgba(215, 185, 120, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(46, 46, 46, 0.98) 0%,
+      rgba(28, 28, 28, 0.99) 100%
+    );
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
 }
 
 html:has(.page-shell-mounts) .mount-detail-card {
   border-color: rgba(139, 198, 255, 0.18);
   background:
-    radial-gradient(circle at top left, rgba(139, 198, 255, 0.14) 0%, rgba(139, 198, 255, 0) 30%),
-    radial-gradient(circle at bottom right, rgba(243, 195, 108, 0.05) 0%, rgba(243, 195, 108, 0) 20%),
-    linear-gradient(180deg, rgba(30, 36, 48, 0.98) 0%, rgba(16, 18, 24, 0.99) 100%);
+    radial-gradient(
+      circle at top left,
+      rgba(139, 198, 255, 0.14) 0%,
+      rgba(139, 198, 255, 0) 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(243, 195, 108, 0.05) 0%,
+      rgba(243, 195, 108, 0) 20%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(30, 36, 48, 0.98) 0%,
+      rgba(16, 18, 24, 0.99) 100%
+    );
   box-shadow:
     inset 0 0 0 1px rgba(139, 198, 255, 0.05),
     0 30px 80px rgba(0, 0, 0, 0.42);
@@ -1034,7 +1509,11 @@ html:has(.page-shell-mounts) .mount-detail-card {
   outline: 2px dashed rgba(95, 46, 18, 0.42);
   outline-offset: calc(-12px * var(--ui-scale));
   background:
-    radial-gradient(circle at top, rgba(255, 232, 181, 0.32) 0%, rgba(255, 232, 181, 0) 28%),
+    radial-gradient(
+      circle at top,
+      rgba(255, 232, 181, 0.32) 0%,
+      rgba(255, 232, 181, 0) 28%
+    ),
     linear-gradient(180deg, #bf8750 0%, #a86f3e 100%);
   box-shadow:
     inset 0 0 0 1px rgba(113, 62, 29, 0.34),
@@ -1053,20 +1532,31 @@ html:has(.page-shell-mounts) .mount-detail-card {
 .minion-detail-card::-webkit-scrollbar-track {
   border: calc(4px * var(--ui-scale)) solid transparent;
   border-radius: 999px;
-  background:
-    linear-gradient(rgba(255, 246, 194, 0.16), rgba(255, 246, 194, 0.16)) padding-box;
+  background: linear-gradient(
+      rgba(255, 246, 194, 0.16),
+      rgba(255, 246, 194, 0.16)
+    )
+    padding-box;
 }
 
 .minion-detail-card::-webkit-scrollbar-thumb {
   border: calc(4px * var(--ui-scale)) solid transparent;
   border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(95, 46, 18, 0.62), rgba(74, 37, 17, 0.72)) padding-box;
+  background: linear-gradient(
+      180deg,
+      rgba(95, 46, 18, 0.62),
+      rgba(74, 37, 17, 0.72)
+    )
+    padding-box;
 }
 
 .minion-detail-card::-webkit-scrollbar-thumb:hover {
-  background:
-    linear-gradient(180deg, rgba(95, 46, 18, 0.78), rgba(74, 37, 17, 0.86)) padding-box;
+  background: linear-gradient(
+      180deg,
+      rgba(95, 46, 18, 0.78),
+      rgba(74, 37, 17, 0.86)
+    )
+    padding-box;
 }
 
 .minion-detail-card > .mount-detail-header,
@@ -1117,7 +1607,11 @@ html:has(.page-shell-mounts) .mount-detail-card {
 }
 
 .minion-detail-card .mount-detail-expansion-badge {
-  background: linear-gradient(180deg, rgba(255, 232, 181, 0.28) 0%, rgba(255, 232, 181, 0.14) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 232, 181, 0.28) 0%,
+    rgba(255, 232, 181, 0.14) 100%
+  );
 }
 
 .minion-detail-card .mount-detail-icon {
@@ -1377,7 +1871,11 @@ html:has(.page-shell-mounts) .mount-detail-card {
   border-radius: 999px;
   cursor: pointer;
   line-height: 1;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .mount-detail-favorite {
@@ -1488,12 +1986,20 @@ html:has(.page-shell-mounts) .mount-detail-badge {
 }
 
 .mount-detail-expansion-badge {
-  background: linear-gradient(180deg, rgba(199, 161, 95, 0.22) 0%, rgba(199, 161, 95, 0.08) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(199, 161, 95, 0.22) 0%,
+    rgba(199, 161, 95, 0.08) 100%
+  );
   border-color: rgba(226, 192, 132, 0.25);
 }
 
 html:has(.page-shell-mounts) .mount-detail-expansion-badge {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.22) 0%, rgba(74, 118, 177, 0.1) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.22) 0%,
+    rgba(74, 118, 177, 0.1) 100%
+  );
   border-color: rgba(139, 198, 255, 0.24);
 }
 
@@ -1515,13 +2021,21 @@ html:has(.page-shell-mounts) .mount-detail-expansion-badge {
   align-items: center;
   justify-content: center;
   border-radius: calc(20px * var(--ui-scale));
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 html:has(.page-shell-mounts) .mount-detail-icon {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.14) 0%, rgba(74, 118, 177, 0.06) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.14) 0%,
+    rgba(74, 118, 177, 0.06) 100%
+  );
   border-color: rgba(139, 198, 255, 0.18);
   box-shadow: inset 0 1px 0 rgba(200, 230, 255, 0.12);
 }
@@ -1555,7 +2069,10 @@ html:has(.page-shell-mounts) .mount-detail-icon {
 
 .mount-detail-body {
   display: grid;
-  grid-template-columns: minmax(calc(260px * var(--ui-scale)), calc(340px * var(--ui-scale))) 1fr;
+  grid-template-columns: minmax(
+      calc(260px * var(--ui-scale)),
+      calc(340px * var(--ui-scale))
+    ) 1fr;
   gap: var(--gap-lg);
 }
 
@@ -1642,7 +2159,9 @@ html:has(.page-shell-mounts) .mount-detail-character-status strong {
   border-radius: var(--panel-radius-md);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 html:has(.page-shell-mounts) .mount-detail-source {
@@ -1728,7 +2247,10 @@ html:has(.page-shell-mounts) .mount-detail-source-copy-link:hover {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 html:has(.page-shell-mounts) .mount-detail-source-pill {
@@ -1755,8 +2277,16 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .page-shell-mounts {
   position: relative;
   background:
-    radial-gradient(circle at top left, rgba(103, 127, 171, 0.04) 0%, rgba(103, 127, 171, 0) 26%),
-    radial-gradient(circle at bottom right, rgba(243, 195, 108, 0.025) 0%, rgba(243, 195, 108, 0) 18%),
+    radial-gradient(
+      circle at top left,
+      rgba(103, 127, 171, 0.04) 0%,
+      rgba(103, 127, 171, 0) 26%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(243, 195, 108, 0.025) 0%,
+      rgba(243, 195, 108, 0) 18%
+    ),
     linear-gradient(180deg, #131313 0%, #0d0d0d 100%);
 }
 
@@ -1766,15 +2296,34 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.015) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.015) 50%, rgba(255, 255, 255, 0.015) 75%, transparent 75%, transparent);
-  background-size: 24px 24px, 60px 60px;
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 0
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.015) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.015) 50%,
+      rgba(255, 255, 255, 0.015) 75%,
+      transparent 75%,
+      transparent
+    );
+  background-size:
+    24px 24px,
+    60px 60px;
   opacity: 0.18;
 }
 
 .page-shell-mounts .mount-card {
   background:
-    radial-gradient(circle at top, rgba(139, 198, 255, 0.12) 0%, rgba(139, 198, 255, 0) 26%),
+    radial-gradient(
+      circle at top,
+      rgba(139, 198, 255, 0.12) 0%,
+      rgba(139, 198, 255, 0) 26%
+    ),
     linear-gradient(180deg, #232d3d 0%, #171c25 100%);
   border: 1px solid rgba(139, 198, 255, 0.09);
   box-shadow:
@@ -1790,8 +2339,16 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .page-shell-mounts .mount-card-owned {
   background:
-    radial-gradient(circle at top, rgba(111, 184, 95, 0.18) 0%, rgba(111, 184, 95, 0) 30%),
-    radial-gradient(circle at top left, rgba(139, 198, 255, 0.08) 0%, rgba(139, 198, 255, 0) 26%),
+    radial-gradient(
+      circle at top,
+      rgba(111, 184, 95, 0.18) 0%,
+      rgba(111, 184, 95, 0) 30%
+    ),
+    radial-gradient(
+      circle at top left,
+      rgba(139, 198, 255, 0.08) 0%,
+      rgba(139, 198, 255, 0) 26%
+    ),
     linear-gradient(180deg, #223228 0%, #151c1b 100%);
   box-shadow:
     inset 0 0 0 1px rgba(136, 214, 126, 0.34),
@@ -1802,12 +2359,20 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .page-shell-mounts .mount-card::before {
   width: calc(132px * var(--ui-scale));
   height: calc(96px * var(--ui-scale));
-  background: radial-gradient(circle, rgba(139, 198, 255, 0.08) 0%, rgba(139, 198, 255, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(139, 198, 255, 0.08) 0%,
+    rgba(139, 198, 255, 0) 72%
+  );
   opacity: 0.18;
 }
 
 .page-shell-mounts .mount-card-owned::before {
-  background: radial-gradient(circle, rgba(136, 214, 126, 0.16) 0%, rgba(136, 214, 126, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(136, 214, 126, 0.16) 0%,
+    rgba(136, 214, 126, 0) 72%
+  );
   opacity: 0.55;
 }
 
@@ -1824,7 +2389,14 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .page-shell-mounts .mount-card h2::before,
 .page-shell-mounts .mount-card h2::after {
-  background: linear-gradient(90deg, rgba(139, 198, 255, 0) 0%, rgba(139, 198, 255, 0.2) 18%, rgba(139, 198, 255, 0.3) 50%, rgba(139, 198, 255, 0.2) 82%, rgba(139, 198, 255, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(139, 198, 255, 0) 0%,
+    rgba(139, 198, 255, 0.2) 18%,
+    rgba(139, 198, 255, 0.3) 50%,
+    rgba(139, 198, 255, 0.2) 82%,
+    rgba(139, 198, 255, 0) 100%
+  );
 }
 
 .page-shell-mounts .mount-character-status {
@@ -1852,8 +2424,16 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .page-shell-minions {
   position: relative;
   background:
-    radial-gradient(circle at top left, rgba(242, 181, 121, 0.08) 0%, rgba(242, 181, 121, 0) 22%),
-    radial-gradient(circle at top right, rgba(248, 214, 161, 0.04) 0%, rgba(248, 214, 161, 0) 18%),
+    radial-gradient(
+      circle at top left,
+      rgba(242, 181, 121, 0.08) 0%,
+      rgba(242, 181, 121, 0) 22%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(248, 214, 161, 0.04) 0%,
+      rgba(248, 214, 161, 0) 18%
+    ),
     linear-gradient(180deg, #16110f 0%, #100c0b 100%);
 }
 
@@ -1863,9 +2443,24 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(255, 232, 204, 0.08) 1px, transparent 0),
-    linear-gradient(135deg, rgba(255, 214, 178, 0.03) 25%, transparent 25%, transparent 50%, rgba(255, 214, 178, 0.03) 50%, rgba(255, 214, 178, 0.03) 75%, transparent 75%, transparent);
-  background-size: 24px 24px, 60px 60px;
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 232, 204, 0.08) 1px,
+      transparent 0
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 214, 178, 0.03) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 214, 178, 0.03) 50%,
+      rgba(255, 214, 178, 0.03) 75%,
+      transparent 75%,
+      transparent
+    );
+  background-size:
+    24px 24px,
+    60px 60px;
   opacity: 0.45;
 }
 
@@ -1882,8 +2477,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 }
 
 .page-shell-minions .filters-panel {
-  background:
-    linear-gradient(180deg, rgba(49, 35, 30, 0.92) 0%, rgba(32, 24, 21, 0.96) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(49, 35, 30, 0.92) 0%,
+    rgba(32, 24, 21, 0.96) 100%
+  );
   border: 1px solid rgba(255, 214, 178, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 244, 229, 0.03);
 }
@@ -1896,7 +2494,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   outline: 2px dashed rgba(95, 46, 18, 0.38);
   outline-offset: calc(-9px * var(--ui-scale));
   background:
-    radial-gradient(circle at top, rgba(255, 232, 181, 0.18) 0%, rgba(255, 232, 181, 0) 30%),
+    radial-gradient(
+      circle at top,
+      rgba(255, 232, 181, 0.18) 0%,
+      rgba(255, 232, 181, 0) 30%
+    ),
     linear-gradient(180deg, #bf8750 0%, #a86f3e 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 224, 178, 0.22),
@@ -1923,8 +2525,16 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .page-shell-achievements {
   position: relative;
   background:
-    radial-gradient(circle at top left, rgba(181, 35, 26, 0.16) 0%, rgba(181, 35, 26, 0) 24%),
-    radial-gradient(circle at top right, rgba(248, 214, 137, 0.08) 0%, rgba(248, 214, 137, 0) 20%),
+    radial-gradient(
+      circle at top left,
+      rgba(181, 35, 26, 0.16) 0%,
+      rgba(181, 35, 26, 0) 24%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(248, 214, 137, 0.08) 0%,
+      rgba(248, 214, 137, 0) 20%
+    ),
     linear-gradient(180deg, #250a08 0%, #120504 100%);
 }
 
@@ -1934,9 +2544,24 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(255, 226, 165, 0.09) 1px, transparent 0),
-    linear-gradient(135deg, rgba(255, 214, 137, 0.025) 25%, transparent 25%, transparent 50%, rgba(255, 214, 137, 0.025) 50%, rgba(255, 214, 137, 0.025) 75%, transparent 75%, transparent);
-  background-size: 24px 24px, 60px 60px;
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 226, 165, 0.09) 1px,
+      transparent 0
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 214, 137, 0.025) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 214, 137, 0.025) 50%,
+      rgba(255, 214, 137, 0.025) 75%,
+      transparent 75%,
+      transparent
+    );
+  background-size:
+    24px 24px,
+    60px 60px;
   opacity: 0.38;
 }
 
@@ -1954,8 +2579,16 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .page-shell-achievements .filters-panel {
   background:
-    radial-gradient(circle at top, rgba(248, 214, 137, 0.08) 0%, rgba(248, 214, 137, 0) 24%),
-    linear-gradient(180deg, rgba(63, 16, 12, 0.94) 0%, rgba(34, 9, 8, 0.98) 100%);
+    radial-gradient(
+      circle at top,
+      rgba(248, 214, 137, 0.08) 0%,
+      rgba(248, 214, 137, 0) 24%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(63, 16, 12, 0.94) 0%,
+      rgba(34, 9, 8, 0.98) 100%
+    );
   border: 1px solid rgba(248, 214, 137, 0.14);
   box-shadow:
     inset 0 1px 0 rgba(255, 238, 190, 0.05),
@@ -1987,17 +2620,41 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .page-shell-achievements .collection-filter-button,
 .page-shell-achievements .reset-filter-button,
 .page-shell-achievements .expansion-card {
-  background: rgba(248, 214, 137, 0.06);
-  border: 1px solid rgba(248, 214, 137, 0.1);
+  background: rgba(137, 32, 22, 0.24);
+  border: 1px solid rgba(248, 214, 137, 0.12);
   color: #f7d994;
 }
 
 .page-shell-achievements .collection-filter-button:hover,
 .page-shell-achievements .reset-filter-button:hover,
 .page-shell-achievements .expansion-card.active {
-  background: rgba(248, 214, 137, 0.14);
-  border-color: rgba(248, 214, 137, 0.22);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.12) 0%,
+      rgba(255, 224, 142, 0) 34%
+    ),
+    rgba(166, 44, 29, 0.42);
+  border-color: rgba(248, 214, 137, 0.28);
   color: #fff2c8;
+}
+
+.page-shell-achievements .collection-filter-button.active,
+.page-shell-achievements .reset-filter-button.active {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.14) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(177, 44, 31, 0.82) 0%,
+      rgba(98, 18, 13, 0.88) 100%
+    );
+  border-color: rgba(248, 214, 137, 0.34);
+  color: #fff2c8;
+  opacity: 1;
 }
 
 .page-shell-achievements .type-category-title {
@@ -2014,7 +2671,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .achievement-card {
   border: 1px solid rgba(248, 214, 137, 0.34);
   background:
-    radial-gradient(circle at top, rgba(248, 214, 137, 0.18) 0%, rgba(248, 214, 137, 0) 24%),
+    radial-gradient(
+      circle at top,
+      rgba(248, 214, 137, 0.18) 0%,
+      rgba(248, 214, 137, 0) 24%
+    ),
     linear-gradient(180deg, #8a1e15 0%, #55100d 58%, #2a0806 100%);
   box-shadow:
     inset 0 0 0 2px rgba(255, 224, 142, 0.16),
@@ -2036,8 +2697,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   top: calc(-18px * var(--ui-scale));
   width: calc(180px * var(--ui-scale));
   height: calc(112px * var(--ui-scale));
-  background:
-    radial-gradient(circle, rgba(255, 224, 142, 0.22) 0%, rgba(255, 224, 142, 0) 68%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 224, 142, 0.22) 0%,
+    rgba(255, 224, 142, 0) 68%
+  );
 }
 
 .achievement-card::after {
@@ -2054,7 +2718,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .achievement-card.mount-card-owned {
   background:
-    radial-gradient(circle at top, rgba(255, 224, 142, 0.2) 0%, rgba(255, 224, 142, 0) 24%),
+    radial-gradient(
+      circle at top,
+      rgba(255, 224, 142, 0.2) 0%,
+      rgba(255, 224, 142, 0) 24%
+    ),
     linear-gradient(180deg, #812018 0%, #45120e 58%, #1f0806 100%);
   box-shadow:
     inset 0 0 0 1px rgba(136, 214, 126, 0.32),
@@ -2071,27 +2739,39 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .achievement-card h2::before,
 .achievement-card h2::after {
-  background: linear-gradient(90deg, rgba(255, 224, 142, 0) 0%, rgba(255, 224, 142, 0.34) 18%, rgba(255, 224, 142, 0.72) 50%, rgba(255, 224, 142, 0.34) 82%, rgba(255, 224, 142, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 224, 142, 0) 0%,
+    rgba(255, 224, 142, 0.34) 18%,
+    rgba(255, 224, 142, 0.72) 50%,
+    rgba(255, 224, 142, 0.34) 82%,
+    rgba(255, 224, 142, 0) 100%
+  );
 }
 
 .achievement-card .mount-patch img {
-  width: calc(88px * var(--ui-scale));
+  width: calc(160px * var(--ui-scale));
   height: calc(88px * var(--ui-scale));
 }
 
 .achievement-card .mount-image {
-  width: calc(92px * var(--ui-scale));
+  width: calc(76px * var(--ui-scale));
   aspect-ratio: 1 / 1;
-  margin-inline: auto;
-  border-radius: 999px;
-  background: rgba(255, 224, 142, 0.14);
-  border: 1px solid rgba(255, 224, 142, 0.24);
+  margin: calc(12px * var(--ui-scale)) auto calc(16px * var(--ui-scale));
+  border-radius: 0;
+  background: transparent;
+  border: 0;
 }
 
 .achievement-card .mount-image img {
-  width: calc(62px * var(--ui-scale));
-  height: calc(62px * var(--ui-scale));
-  filter: drop-shadow(0 7px 9px rgba(28, 5, 3, 0.36));
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  filter: drop-shadow(0 8px 10px rgba(28, 5, 3, 0.42));
+}
+
+.achievement-card .mount-owned {
+  margin-top: calc(2px * var(--ui-scale));
 }
 
 .achievement-card .mount-owned h4,
@@ -2116,14 +2796,23 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 }
 
 .achievement-detail-card {
+  width: min(calc(680px * var(--ui-scale)), 100%);
   border-color: rgba(248, 214, 137, 0.34);
   background:
-    radial-gradient(circle at top, rgba(248, 214, 137, 0.18) 0%, rgba(248, 214, 137, 0) 28%),
+    radial-gradient(
+      circle at top,
+      rgba(248, 214, 137, 0.18) 0%,
+      rgba(248, 214, 137, 0) 28%
+    ),
     linear-gradient(180deg, #71180f 0%, #350b08 100%);
   box-shadow:
     inset 0 0 0 2px rgba(255, 224, 142, 0.12),
     0 30px 80px rgba(0, 0, 0, 0.48);
   color: #ffe6a8;
+}
+
+.achievement-detail-body {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .achievement-detail-card .mount-detail-header,
@@ -2132,6 +2821,10 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .achievement-detail-card .mount-detail-source,
 .achievement-detail-stats div {
   border-color: rgba(255, 224, 142, 0.18);
+}
+
+.achievement-detail-card .mount-detail-header {
+  margin-bottom: 0;
 }
 
 .achievement-detail-card .mount-detail-badge,
@@ -2152,6 +2845,25 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 .achievement-detail-card .mount-detail-description,
 .achievement-detail-card .mount-detail-source-copy {
   color: #f8d998;
+}
+
+.achievement-detail-earned {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6px * var(--ui-scale));
+  width: fit-content;
+  margin: var(--space-sm) 0 0;
+  padding: calc(7px * var(--ui-scale)) var(--space-sm);
+  border: 1px solid rgba(255, 224, 142, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 224, 142, 0.08);
+  color: #f8d998;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.achievement-detail-earned strong {
+  color: #fff0bf;
 }
 
 .achievement-detail-card .mount-detail-image {
@@ -2196,6 +2908,26 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   color: #ffe6a8;
 }
 
+.achievement-detail-card .mount-detail-source-pill:first-child {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.16) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(177, 44, 31, 0.82) 0%,
+      rgba(98, 18, 13, 0.88) 100%
+    );
+  border-color: rgba(248, 214, 137, 0.36);
+  color: #fff2c8;
+}
+
+.achievement-detail-card .mount-detail-source-pill-secondary {
+  opacity: 0.82;
+}
+
 .achievement-detail-card .mount-detail-source-pill:hover {
   background: rgba(255, 224, 142, 0.18);
   border-color: rgba(255, 224, 142, 0.34);
@@ -2203,9 +2935,36 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 html:has(.page-shell-achievements) .character-sync-button,
 html:has(.page-shell-achievements) .character-launch-button {
-  background: linear-gradient(180deg, rgba(248, 214, 137, 0.96) 0%, rgba(177, 44, 31, 0.98) 100%);
-  border-color: rgba(255, 237, 176, 0.42);
-  color: #220705;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.18) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(188, 45, 32, 0.98) 0%,
+      rgba(112, 20, 15, 0.99) 100%
+    );
+  border-color: rgba(255, 237, 176, 0.4);
+  color: #fff0bf;
+}
+
+html:has(.page-shell-achievements) .character-sync-button:hover,
+html:has(.page-shell-achievements) .character-launch-button:hover {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 224, 142, 0.22) 0%,
+      rgba(255, 224, 142, 0) 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(205, 55, 38, 0.99) 0%,
+      rgba(126, 26, 18, 1) 100%
+    );
+  border-color: rgba(255, 237, 176, 0.52);
+  color: #fff6d7;
 }
 
 .scroll-top-button {
@@ -2220,58 +2979,94 @@ html:has(.page-shell-achievements) .character-launch-button {
   padding: 0 calc(14px * var(--ui-scale));
   border: 1px solid rgba(255, 232, 181, 0.16);
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(36, 36, 36, 0.94) 0%, rgba(24, 24, 24, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(36, 36, 36, 0.94) 0%,
+    rgba(24, 24, 24, 0.98) 100%
+  );
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
   color: #f2ead5;
   cursor: pointer;
   font: inherit;
   font-weight: 700;
   letter-spacing: 0.04em;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 html:has(.page-shell-mounts) .scroll-top-button {
   border-color: rgba(139, 198, 255, 0.18);
-  background: linear-gradient(180deg, rgba(24, 31, 44, 0.96) 0%, rgba(14, 18, 27, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(24, 31, 44, 0.96) 0%,
+    rgba(14, 18, 27, 0.99) 100%
+  );
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
   color: #d9ebff;
 }
 
 html:has(.page-shell-minions) .scroll-top-button {
   border-color: rgba(255, 232, 181, 0.16);
-  background: linear-gradient(180deg, rgba(38, 26, 18, 0.96) 0%, rgba(21, 14, 10, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(38, 26, 18, 0.96) 0%,
+    rgba(21, 14, 10, 0.99) 100%
+  );
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
   color: #f2ead5;
 }
 
 html:has(.page-shell-achievements) .scroll-top-button {
   border-color: rgba(255, 224, 142, 0.22);
-  background: linear-gradient(180deg, rgba(78, 18, 13, 0.96) 0%, rgba(30, 8, 7, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(78, 18, 13, 0.96) 0%,
+    rgba(30, 8, 7, 0.99) 100%
+  );
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
   color: #ffe6a8;
 }
 
 .scroll-top-button:hover {
   transform: translateY(-2px);
-  background: linear-gradient(180deg, rgba(44, 44, 44, 0.96) 0%, rgba(28, 28, 28, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(44, 44, 44, 0.96) 0%,
+    rgba(28, 28, 28, 0.99) 100%
+  );
   border-color: rgba(255, 232, 181, 0.28);
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
 }
 
 html:has(.page-shell-mounts) .scroll-top-button:hover {
-  background: linear-gradient(180deg, rgba(34, 44, 63, 0.98) 0%, rgba(19, 26, 38, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(34, 44, 63, 0.98) 0%,
+    rgba(19, 26, 38, 0.99) 100%
+  );
   border-color: rgba(139, 198, 255, 0.34);
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
 }
 
 html:has(.page-shell-minions) .scroll-top-button:hover {
-  background: linear-gradient(180deg, rgba(48, 34, 22, 0.98) 0%, rgba(27, 18, 12, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(48, 34, 22, 0.98) 0%,
+    rgba(27, 18, 12, 0.99) 100%
+  );
   border-color: rgba(255, 232, 181, 0.28);
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
 }
 
 html:has(.page-shell-achievements) .scroll-top-button:hover {
-  background: linear-gradient(180deg, rgba(96, 23, 17, 0.98) 0%, rgba(45, 11, 8, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(96, 23, 17, 0.98) 0%,
+    rgba(45, 11, 8, 0.99) 100%
+  );
   border-color: rgba(255, 224, 142, 0.36);
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
 }
@@ -2422,7 +3217,9 @@ html:has(.page-shell-minions) .page-header-character-muted {
   position: sticky;
   top: calc(var(--shell-space) + var(--collection-nav-offset));
   z-index: 960;
-  max-height: calc(100vh - var(--collection-nav-offset) - (var(--shell-space) * 2));
+  max-height: calc(
+    100vh - var(--collection-nav-offset) - (var(--shell-space) * 2)
+  );
 }
 
 .filters-panel {
@@ -2430,14 +3227,19 @@ html:has(.page-shell-minions) .page-header-character-muted {
   border-radius: var(--panel-radius-md);
   padding: calc(20px * var(--ui-scale)) var(--space-md);
   overflow-y: auto;
-  max-height: calc(100vh - var(--collection-nav-offset) - (var(--shell-space) * 2));
+  max-height: calc(
+    100vh - var(--collection-nav-offset) - (var(--shell-space) * 2)
+  );
   scrollbar-width: thin;
   scrollbar-color: #5a5a5a transparent;
 }
 
 .page-shell-mounts .filters-panel {
-  background:
-    linear-gradient(180deg, rgba(26, 34, 46, 0.96) 0%, rgba(16, 20, 29, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 34, 46, 0.96) 0%,
+    rgba(16, 20, 29, 0.98) 100%
+  );
   border: 1px solid rgba(139, 198, 255, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(200, 230, 255, 0.03),
@@ -2468,7 +3270,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
 }
 
 .page-shell-mounts .filters-panel::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(139, 198, 255, 0.86) 0%, rgba(74, 118, 177, 0.94) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 198, 255, 0.86) 0%,
+    rgba(74, 118, 177, 0.94) 100%
+  );
   border-radius: 999px;
   border: 2px solid rgba(16, 20, 29, 0.98);
 }
@@ -2478,7 +3284,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
 }
 
 .page-shell-mounts .filters-panel::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(160, 216, 255, 0.92) 0%, rgba(103, 150, 206, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(160, 216, 255, 0.92) 0%,
+    rgba(103, 150, 206, 0.98) 100%
+  );
 }
 
 .filters-panel h2,
@@ -2521,11 +3331,13 @@ html:has(.page-shell-minions) .page-header-character-muted {
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   opacity: 0.55;
-  transition: background 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .collection-filter-button:hover {
-
   transform: translateY(-1px);
 }
 
@@ -2612,7 +3424,10 @@ html:has(.page-shell-minions) .page-header-character-muted {
   font: inherit;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .search-input::placeholder {
@@ -2688,8 +3503,16 @@ html:has(.page-shell-minions) .page-header-character-muted {
 
 .page-shell-mounts .mount-empty-state {
   background:
-    radial-gradient(circle at top, rgba(139, 198, 255, 0.08) 0%, rgba(139, 198, 255, 0) 28%),
-    linear-gradient(180deg, rgba(31, 38, 52, 0.96) 0%, rgba(18, 22, 31, 0.98) 100%);
+    radial-gradient(
+      circle at top,
+      rgba(139, 198, 255, 0.08) 0%,
+      rgba(139, 198, 255, 0) 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(31, 38, 52, 0.96) 0%,
+      rgba(18, 22, 31, 0.98) 100%
+    );
   border: 1px solid rgba(139, 198, 255, 0.1);
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.18);
 }
@@ -2768,7 +3591,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .reset-filter-button img {
@@ -2810,7 +3637,9 @@ html:has(.page-shell-minions) .page-header-character-muted {
   border-radius: var(--space-xs);
   cursor: pointer;
   opacity: 0.45;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .filter-button img {
@@ -2818,7 +3647,9 @@ html:has(.page-shell-minions) .page-header-character-muted {
   height: calc(42px * var(--ui-scale));
   object-fit: contain;
   filter: grayscale(100%);
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
 }
 
 .filter-button.active {
@@ -2897,7 +3728,6 @@ html:has(.page-shell-minions) .page-header-character-muted {
   color: #f0f0f0;
 }
 
-
 .mount-grid {
   display: flex;
   flex-wrap: wrap;
@@ -2926,7 +3756,14 @@ html:has(.page-shell-minions) .page-header-character-muted {
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),
     0 12px 24px rgba(0, 0, 0, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.page-shell-achievements .achievement-card {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mount-card-owned {
@@ -2955,7 +3792,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
   width: calc(160px * var(--ui-scale));
   height: calc(120px * var(--ui-scale));
   transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0) 72%
+  );
   pointer-events: none;
 }
 
@@ -2964,7 +3805,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
   padding: calc(14px * var(--ui-scale));
   border-radius: calc(24px * var(--ui-scale));
   background:
-    radial-gradient(circle at top, rgba(255, 232, 181, 0.24) 0%, rgba(255, 232, 181, 0) 26%),
+    radial-gradient(
+      circle at top,
+      rgba(255, 232, 181, 0.24) 0%,
+      rgba(255, 232, 181, 0) 26%
+    ),
     linear-gradient(180deg, #b77f4a 0%, #9c6438 100%);
   box-shadow:
     inset 0 0 0 1px rgba(113, 62, 29, 0.34),
@@ -2973,7 +3818,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
 }
 
 .minion-card::before {
-  background: radial-gradient(circle, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.14) 0%,
+    rgba(0, 0, 0, 0) 72%
+  );
   opacity: 0.55;
 }
 
@@ -2988,7 +3837,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
 
 .minion-card.mount-card-owned {
   background:
-    radial-gradient(circle at top, rgba(155, 224, 141, 0.2) 0%, rgba(155, 224, 141, 0) 28%),
+    radial-gradient(
+      circle at top,
+      rgba(155, 224, 141, 0.2) 0%,
+      rgba(155, 224, 141, 0) 28%
+    ),
     linear-gradient(180deg, #b27a46 0%, #916037 100%);
   box-shadow:
     inset 0 0 0 1px rgba(104, 168, 80, 0.5),
@@ -2998,7 +3851,11 @@ html:has(.page-shell-minions) .page-header-character-muted {
 }
 
 .minion-card.mount-card-owned::before {
-  background: radial-gradient(circle, rgba(155, 224, 141, 0.16) 0%, rgba(155, 224, 141, 0) 72%);
+  background: radial-gradient(
+    circle,
+    rgba(155, 224, 141, 0.16) 0%,
+    rgba(155, 224, 141, 0) 72%
+  );
   opacity: 0.5;
 }
 
@@ -3023,7 +3880,14 @@ html:has(.page-shell-minions) .page-header-character-muted {
 
 .minion-card h2::before,
 .minion-card h2::after {
-  background: linear-gradient(90deg, rgba(78, 43, 20, 0) 0%, rgba(78, 43, 20, 0.28) 18%, rgba(78, 43, 20, 0.42) 50%, rgba(78, 43, 20, 0.28) 82%, rgba(78, 43, 20, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(78, 43, 20, 0) 0%,
+    rgba(78, 43, 20, 0.28) 18%,
+    rgba(78, 43, 20, 0.42) 50%,
+    rgba(78, 43, 20, 0.28) 82%,
+    rgba(78, 43, 20, 0) 100%
+  );
 }
 
 .minion-card .mount-image {
@@ -3105,7 +3969,14 @@ html:has(.page-shell-minions) .page-header-character-muted {
   width: 66%;
   height: 1px;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.22) 18%, rgba(255, 255, 255, 0.34) 50%, rgba(255, 255, 255, 0.22) 82%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.22) 18%,
+    rgba(255, 255, 255, 0.34) 50%,
+    rgba(255, 255, 255, 0.22) 82%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 .mount-card h2::before {

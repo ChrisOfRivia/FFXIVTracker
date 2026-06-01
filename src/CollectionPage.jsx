@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import {
   DATA_CENTER_REGION,
   REGIONS,
   WORLD_DATA_CENTER,
   getDataCentersByRegion,
   getWorldsByDataCenter,
-} from "../shared/ffxivWorlds.js"
+} from "../shared/ffxivWorlds.js";
 
 const SOURCE_ICONS = {
   Unknown: "/icons/unknown.png",
@@ -46,12 +46,20 @@ const SOURCE_ICONS = {
   Voyages: "/icons/voyages.png",
   "Crafting & Gathering": "/icons/crafting.png",
   Other: "/icons/special.png",
-}
+};
 
 const MOUNT_TYPE_GROUPS = [
   {
     label: "Instances",
-    types: ["Dungeon", "Raid", "Trial", "Chaotic Raid", "Deep Dungeon", "V&C Dungeon", "PvP"],
+    types: [
+      "Dungeon",
+      "Raid",
+      "Trial",
+      "Chaotic Raid",
+      "Deep Dungeon",
+      "V&C Dungeon",
+      "PvP",
+    ],
   },
   {
     label: "Exploration",
@@ -63,22 +71,46 @@ const MOUNT_TYPE_GROUPS = [
   },
   {
     label: "Side Content",
-    types: ["Tribal", "Island Sanctuary", "Gold Saucer", "Cosmic Exploration", "Wondrous Tails", "Skybuilders", "Gathering", "Crafting"],
+    types: [
+      "Tribal",
+      "Island Sanctuary",
+      "Gold Saucer",
+      "Cosmic Exploration",
+      "Wondrous Tails",
+      "Skybuilders",
+      "Gathering",
+      "Crafting",
+    ],
   },
   {
     label: "Special",
     types: ["Event", "Premium", "Purchase", "Other"],
   },
-]
+];
 
 const MINION_TYPE_GROUPS = [
   {
     label: "Instances",
-    types: ["Dungeon", "Raid", "Trial", "Chaotic Raid", "Deep Dungeon", "V&C Dungeon", "PvP"],
+    types: [
+      "Dungeon",
+      "Raid",
+      "Trial",
+      "Chaotic Raid",
+      "Deep Dungeon",
+      "V&C Dungeon",
+      "PvP",
+    ],
   },
   {
     label: "Exploration",
-    types: ["Eureka", "Occult Crescent", "Treasure Hunt", "Voyages", "Bozja", "Venture"],
+    types: [
+      "Eureka",
+      "Occult Crescent",
+      "Treasure Hunt",
+      "Voyages",
+      "Bozja",
+      "Venture",
+    ],
   },
   {
     label: "Progression",
@@ -86,13 +118,22 @@ const MINION_TYPE_GROUPS = [
   },
   {
     label: "Side Content",
-    types: ["Tribal", "Island Sanctuary", "Gold Saucer", "Cosmic Exploration", "Wondrous Tails", "Skybuilders", "Gathering", "Crafting"],
+    types: [
+      "Tribal",
+      "Island Sanctuary",
+      "Gold Saucer",
+      "Cosmic Exploration",
+      "Wondrous Tails",
+      "Skybuilders",
+      "Gathering",
+      "Crafting",
+    ],
   },
   {
     label: "Special",
     types: ["Event", "Premium", "Purchase", "Other"],
   },
-]
+];
 
 const ACHIEVEMENT_TYPE_GROUPS = [
   {
@@ -107,7 +148,7 @@ const ACHIEVEMENT_TYPE_GROUPS = [
     label: "Archive",
     types: ["Legacy"],
   },
-]
+];
 
 const EXPANSION_NAMES = {
   ARR: "A Realm Reborn",
@@ -116,14 +157,16 @@ const EXPANSION_NAMES = {
   SHB: "Shadowbringers",
   EW: "Endwalker",
   DT: "Dawntrail",
-}
+};
 
-const EXPANSION_OPTIONS = Object.entries(EXPANSION_NAMES).map(([code, fullName]) => ({
-  code,
-  label: code,
-  fullName,
-  icon: getExpansionIcon(code),
-}))
+const EXPANSION_OPTIONS = Object.entries(EXPANSION_NAMES).map(
+  ([code, fullName]) => ({
+    code,
+    label: code,
+    fullName,
+    icon: getExpansionIcon(code),
+  }),
+);
 
 const GARLAND_TYPE_MAP = {
   Achievement: "achievement",
@@ -134,7 +177,7 @@ const GARLAND_TYPE_MAP = {
   Mob: "mob",
   NPC: "npc",
   Quest: "quest",
-}
+};
 
 const INSTANCE_TYPES = new Set([
   "Trial",
@@ -143,14 +186,14 @@ const INSTANCE_TYPES = new Set([
   "Deep Dungeon",
   "Chaotic Raid",
   "V&C Dungeon",
-])
+]);
 
-const MOGSTATION_SOURCE_TEXT = "Online Store"
+const MOGSTATION_SOURCE_TEXT = "Online Store";
 
 const WIKI_TITLE_OVERRIDES = {
   "Sinus Ardonum": "Sinus Ardorum",
   "The Palace of the Dead": "Palace of the Dead",
-}
+};
 
 const GARLAND_CURRENCY_NAME_OVERRIDES = {
   "Achievement Certificates": "Achievement Certificate",
@@ -171,7 +214,7 @@ const GARLAND_CURRENCY_NAME_OVERRIDES = {
   "Faux Leaves": "Faux Leaf",
   "Fete Tokens": "Fete Token",
   "Gelmorran Potsherds": "Gelmorran Potsherd",
-  "Gil": "Gil",
+  Gil: "Gil",
   "Gold Chocobo Feathers": "Gold Chocobo Feather",
   "Guardian Arkveld Certificates": "Guardian Arkveld Certificate",
   "Hammered Frogments": "Hammered Frogment",
@@ -195,379 +238,454 @@ const GARLAND_CURRENCY_NAME_OVERRIDES = {
   "Twilight Gemstones": "Twilight Gemstone",
   "Vegetal Vouchers": "Vegetal Voucher",
   "Wolf Marks": "Wolf Mark",
-}
+};
 
-const INITIAL_CHARACTER_RESULTS_COUNT = 12
+const INITIAL_CHARACTER_RESULTS_COUNT = 12;
 const DEFAULT_CHARACTER_FORM = {
   region: "",
   dataCenter: "",
   world: "",
   name: "",
-}
+};
 
 const EMPTY_CHARACTER_SYNC_STATE = {
   character: null,
   ownedMountIds: [],
   ownedMountNames: [],
-}
+};
 
 function CollectionPage({ config }) {
-  const typeGroups = getTypeGroups(config.typeGroupVariant)
-  const [mounts, setMounts] = useState([])
-  const [selectedTypes, setSelectedTypes] = useState([])
-  const [selectedExpansions, setSelectedExpansions] = useState([])
-  const [searchQuery, setSearchQuery] = useState("")
-  const [ownedFilter, setOwnedFilter] = useState("all")
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
-  const [selectedMount, setSelectedMount] = useState(null)
-  const [showCharacterSync, setShowCharacterSync] = useState(false)
-  const [showScrollTopButton, setShowScrollTopButton] = useState(false)
-  const [characterForm, setCharacterForm] = useState(DEFAULT_CHARACTER_FORM)
-  const [characterResults, setCharacterResults] = useState([])
-  const [characterStatus, setCharacterStatus] = useState({ tone: "idle", message: "" })
-  const [characterPanelStatus, setCharacterPanelStatus] = useState({ tone: "idle", message: "" })
-  const [isSearchingCharacters, setIsSearchingCharacters] = useState(false)
-  const [isSyncingCharacter, setIsSyncingCharacter] = useState(false)
-  const [characterSyncState, setCharacterSyncState] = useState(() => getStoredCharacterSyncState(config.characterStorageKey))
-  const [favoriteMountIds, setFavoriteMountIds] = useState(() => getStoredFavoriteMountIds(config.favoritesStorageKey))
+  const typeGroups = getTypeGroups(config.typeGroupVariant);
+  const [mounts, setMounts] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedExpansions, setSelectedExpansions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ownedFilter, setOwnedFilter] = useState("all");
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [selectedMount, setSelectedMount] = useState(null);
+  const [showCharacterSync, setShowCharacterSync] = useState(false);
+  const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+  const [characterForm, setCharacterForm] = useState(DEFAULT_CHARACTER_FORM);
+  const [characterResults, setCharacterResults] = useState([]);
+  const [characterStatus, setCharacterStatus] = useState({
+    tone: "idle",
+    message: "",
+  });
+  const [characterPanelStatus, setCharacterPanelStatus] = useState({
+    tone: "idle",
+    message: "",
+  });
+  const [isSearchingCharacters, setIsSearchingCharacters] = useState(false);
+  const [isSyncingCharacter, setIsSyncingCharacter] = useState(false);
+  const [characterSyncState, setCharacterSyncState] = useState(() =>
+    getStoredCharacterSyncState(config.characterStorageKey),
+  );
+  const [favoriteMountIds, setFavoriteMountIds] = useState(() =>
+    getStoredFavoriteMountIds(config.favoritesStorageKey),
+  );
 
   useEffect(() => {
     fetch(config.dataEndpoint)
       .then((response) => response.json())
       .then((data) => {
-        setMounts(Array.isArray(data.results) ? data.results : [])
-      })
-  }, [config.dataEndpoint])
+        setMounts(Array.isArray(data.results) ? data.results : []);
+      });
+  }, [config.dataEndpoint]);
 
   useEffect(() => {
     if (!config.detailHashEnabled || mounts.length === 0) {
-      return undefined
+      return undefined;
     }
 
     function syncSelectedCollectableFromHash() {
-      const detailId = getDetailIdFromHash(window.location.hash, config.key)
+      const detailId = getDetailIdFromHash(window.location.hash, config.key);
 
       if (!detailId) {
-        setSelectedMount(null)
-        return
+        setSelectedMount(null);
+        return;
       }
 
-      setSelectedMount(mounts.find((mount) => mount.id === detailId) || null)
+      setSelectedMount(mounts.find((mount) => mount.id === detailId) || null);
     }
 
-    syncSelectedCollectableFromHash()
-    window.addEventListener("hashchange", syncSelectedCollectableFromHash)
+    syncSelectedCollectableFromHash();
+    window.addEventListener("hashchange", syncSelectedCollectableFromHash);
 
     return () => {
-      window.removeEventListener("hashchange", syncSelectedCollectableFromHash)
-    }
-  }, [config.detailHashEnabled, config.key, mounts])
+      window.removeEventListener("hashchange", syncSelectedCollectableFromHash);
+    };
+  }, [config.detailHashEnabled, config.key, mounts]);
 
   useEffect(() => {
-    document.body.style.overflow = selectedMount || showCharacterSync ? "hidden" : ""
+    document.body.style.overflow =
+      selectedMount || showCharacterSync ? "hidden" : "";
 
     return () => {
-      document.body.style.overflow = ""
-    }
-  }, [selectedMount, showCharacterSync])
+      document.body.style.overflow = "";
+    };
+  }, [selectedMount, showCharacterSync]);
 
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Escape") {
-        setSelectedMount(null)
-        if (config.detailHashEnabled && getDetailIdFromHash(window.location.hash, config.key)) {
-          setRouteHash(`/${config.key}`)
+        setSelectedMount(null);
+        if (
+          config.detailHashEnabled &&
+          getDetailIdFromHash(window.location.hash, config.key)
+        ) {
+          setRouteHash(`/${config.key}`);
         }
-        setShowCharacterSync(false)
+        setShowCharacterSync(false);
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [config.detailHashEnabled, config.key])
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [config.detailHashEnabled, config.key]);
 
   useEffect(() => {
     function handleScroll() {
-      setShowScrollTopButton(window.scrollY > 360)
+      setShowScrollTopButton(window.scrollY > 360);
     }
 
-    handleScroll()
-    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (characterSyncState.character) {
-      window.localStorage.setItem(config.characterStorageKey, JSON.stringify(characterSyncState))
-      return
+      window.localStorage.setItem(
+        config.characterStorageKey,
+        JSON.stringify(characterSyncState),
+      );
+      return;
     }
 
-    window.localStorage.removeItem(config.characterStorageKey)
-  }, [characterSyncState, config.characterStorageKey])
+    window.localStorage.removeItem(config.characterStorageKey);
+  }, [characterSyncState, config.characterStorageKey]);
 
   useEffect(() => {
     if (favoriteMountIds.length > 0) {
-      window.localStorage.setItem(config.favoritesStorageKey, JSON.stringify(favoriteMountIds))
-      return
+      window.localStorage.setItem(
+        config.favoritesStorageKey,
+        JSON.stringify(favoriteMountIds),
+      );
+      return;
     }
 
-    window.localStorage.removeItem(config.favoritesStorageKey)
-  }, [favoriteMountIds, config.favoritesStorageKey])
+    window.localStorage.removeItem(config.favoritesStorageKey);
+  }, [favoriteMountIds, config.favoritesStorageKey]);
 
-  const syncedCharacter = characterSyncState.character
-  const ownedMountIdSet = new Set(characterSyncState.ownedMountIds)
-  const ownedMountNameSet = new Set(characterSyncState.ownedMountNames.map(normalizeMountOwnershipName))
-  const favoriteMountIdSet = new Set(favoriteMountIds)
-  const ownedMountCount = characterSyncState.ownedMountIds.length
-  const totalMountCount = mounts.length
-  const trimmedSearchQuery = searchQuery.trim()
+  const syncedCharacter = characterSyncState.character;
+  const ownedMountIdSet = new Set(characterSyncState.ownedMountIds);
+  const ownedMountNameSet = new Set(
+    characterSyncState.ownedMountNames.map(normalizeMountOwnershipName),
+  );
+  const favoriteMountIdSet = new Set(favoriteMountIds);
+  const ownedMountCount = characterSyncState.ownedMountIds.length;
+  const totalMountCount = mounts.length;
+  const trimmedSearchQuery = searchQuery.trim();
 
   const filteredMounts = mounts.filter((mount) => {
-    const mountType = getCollectableType(mount, config)
-    const expansion = getExpansion(mount.patch)
-    const normalizedQuery = trimmedSearchQuery.toLowerCase()
+    const mountType = getCollectableType(mount, config);
+    const expansion = getExpansion(mount.patch);
+    const normalizedQuery = trimmedSearchQuery.toLowerCase();
     const matchesSearch =
       normalizedQuery === "" ||
       mount.name.toLowerCase().includes(normalizedQuery) ||
-      getCollectableSourceText(mount, config).toLowerCase().includes(normalizedQuery) ||
-      (mount.description || "").toLowerCase().includes(normalizedQuery)
+      getCollectableSourceText(mount, config)
+        .toLowerCase()
+        .includes(normalizedQuery) ||
+      (mount.description || "").toLowerCase().includes(normalizedQuery);
 
-    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(mountType)
-    const matchesExpansion = selectedExpansions.length === 0 || selectedExpansions.includes(expansion)
-    const mountIsOwned = isMountOwned(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet)
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(mountType);
+    const matchesExpansion =
+      selectedExpansions.length === 0 || selectedExpansions.includes(expansion);
+    const mountIsOwned = isMountOwned(
+      mount,
+      syncedCharacter,
+      ownedMountIdSet,
+      ownedMountNameSet,
+    );
     const matchesOwned =
       ownedFilter === "all" ||
       (ownedFilter === "owned" && mountIsOwned) ||
-      (ownedFilter === "unowned" && !mountIsOwned)
-    const matchesFavorites = !showFavoritesOnly || favoriteMountIdSet.has(mount.id)
+      (ownedFilter === "unowned" && !mountIsOwned);
+    const matchesFavorites =
+      !showFavoritesOnly || favoriteMountIdSet.has(mount.id);
 
-    return matchesType && matchesExpansion && matchesSearch && matchesOwned && matchesFavorites
-  })
-  const showFavoritesEmptyState = showFavoritesOnly && favoriteMountIds.length === 0
-  const showFavoritesFilteredEmptyState = showFavoritesOnly && favoriteMountIds.length > 0 && filteredMounts.length === 0
+    return (
+      matchesType &&
+      matchesExpansion &&
+      matchesSearch &&
+      matchesOwned &&
+      matchesFavorites
+    );
+  });
+  const showFavoritesEmptyState =
+    showFavoritesOnly && favoriteMountIds.length === 0;
+  const showFavoritesFilteredEmptyState =
+    showFavoritesOnly &&
+    favoriteMountIds.length > 0 &&
+    filteredMounts.length === 0;
   const showOwnedEmptyState =
     syncedCharacter &&
     ownedFilter === "owned" &&
     ownedMountCount === 0 &&
     filteredMounts.length === 0 &&
-    !showFavoritesOnly
+    !showFavoritesOnly;
 
   function toggleSelection(value, selectedValues, setSelectedValues) {
     if (selectedValues.includes(value)) {
-      setSelectedValues(selectedValues.filter((item) => item !== value))
-      return
+      setSelectedValues(selectedValues.filter((item) => item !== value));
+      return;
     }
 
-    setSelectedValues([...selectedValues, value])
+    setSelectedValues([...selectedValues, value]);
   }
 
   function openMountDetails(mount) {
-    setSelectedMount(mount)
+    setSelectedMount(mount);
 
     if (config.detailHashEnabled) {
-      setRouteHash(`/${config.key}/${mount.id}`)
+      setRouteHash(`/${config.key}/${mount.id}`);
     }
   }
 
   function closeMountDetails() {
-    setSelectedMount(null)
+    setSelectedMount(null);
 
-    if (config.detailHashEnabled && getDetailIdFromHash(window.location.hash, config.key)) {
-      setRouteHash(`/${config.key}`)
+    if (
+      config.detailHashEnabled &&
+      getDetailIdFromHash(window.location.hash, config.key)
+    ) {
+      setRouteHash(`/${config.key}`);
     }
   }
 
   function toggleFavoriteMount(mountId) {
     setFavoriteMountIds((currentIds) => {
       if (currentIds.includes(mountId)) {
-        return currentIds.filter((id) => id !== mountId)
+        return currentIds.filter((id) => id !== mountId);
       }
 
-      return [...currentIds, mountId]
-    })
+      return [...currentIds, mountId];
+    });
   }
 
   function openCharacterSyncModal() {
-    setCharacterForm(DEFAULT_CHARACTER_FORM)
-    setCharacterResults([])
-    setCharacterStatus({ tone: "idle", message: "" })
-    setCharacterPanelStatus({ tone: "idle", message: "" })
-    setShowCharacterSync(true)
+    setCharacterForm(DEFAULT_CHARACTER_FORM);
+    setCharacterResults([]);
+    setCharacterStatus({ tone: "idle", message: "" });
+    setCharacterPanelStatus({ tone: "idle", message: "" });
+    setShowCharacterSync(true);
   }
 
   function handleCharacterFieldChange(field, value) {
     setCharacterForm((currentForm) => {
       if (field === "region") {
-        const nextDataCenters = getDataCentersByRegion(value)
-        const nextDataCenter = nextDataCenters.includes(currentForm.dataCenter) ? currentForm.dataCenter : ""
-        const nextWorlds = getWorldsByDataCenter(nextDataCenter)
+        const nextDataCenters = getDataCentersByRegion(value);
+        const nextDataCenter = nextDataCenters.includes(currentForm.dataCenter)
+          ? currentForm.dataCenter
+          : "";
+        const nextWorlds = getWorldsByDataCenter(nextDataCenter);
 
         return {
           ...currentForm,
           region: value,
           dataCenter: nextDataCenter,
-          world: nextWorlds.includes(currentForm.world) ? currentForm.world : "",
-        }
+          world: nextWorlds.includes(currentForm.world)
+            ? currentForm.world
+            : "",
+        };
       }
 
       if (field === "dataCenter") {
-        const nextWorlds = getWorldsByDataCenter(value)
+        const nextWorlds = getWorldsByDataCenter(value);
 
         return {
           ...currentForm,
           region: DATA_CENTER_REGION[value] || currentForm.region,
           dataCenter: value,
-          world: nextWorlds.includes(currentForm.world) ? currentForm.world : "",
-        }
+          world: nextWorlds.includes(currentForm.world)
+            ? currentForm.world
+            : "",
+        };
       }
 
       if (field === "world") {
-        const nextDataCenter = WORLD_DATA_CENTER[value] || currentForm.dataCenter
+        const nextDataCenter =
+          WORLD_DATA_CENTER[value] || currentForm.dataCenter;
 
         return {
           ...currentForm,
           region: DATA_CENTER_REGION[nextDataCenter] || currentForm.region,
           dataCenter: nextDataCenter,
           world: value,
-        }
+        };
       }
 
       return {
         ...currentForm,
         [field]: value,
-      }
-    })
+      };
+    });
   }
 
   async function handleCharacterSearch(event) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const trimmedName = characterForm.name.trim()
+    const trimmedName = characterForm.name.trim();
 
     if (!trimmedName) {
-      setCharacterStatus({ tone: "error", message: "Enter a character name to search." })
-      setCharacterResults([])
-      return
+      setCharacterStatus({
+        tone: "error",
+        message: "Enter a character name to search.",
+      });
+      setCharacterResults([]);
+      return;
     }
 
-    setIsSearchingCharacters(true)
-    setCharacterStatus({ tone: "idle", message: "" })
+    setIsSearchingCharacters(true);
+    setCharacterStatus({ tone: "idle", message: "" });
 
     try {
-      const searchUrl = new URL("/api/character-search", window.location.origin)
-      searchUrl.searchParams.set("name", trimmedName)
+      const searchUrl = new URL(
+        "/api/character-search",
+        window.location.origin,
+      );
+      searchUrl.searchParams.set("name", trimmedName);
 
       if (characterForm.world) {
-        searchUrl.searchParams.set("server", characterForm.world)
+        searchUrl.searchParams.set("server", characterForm.world);
       }
 
       if (characterForm.dataCenter) {
-        searchUrl.searchParams.set("dataCenter", characterForm.dataCenter)
+        searchUrl.searchParams.set("dataCenter", characterForm.dataCenter);
       }
 
-      const response = await fetch(searchUrl)
-      const payload = await response.json()
+      const response = await fetch(searchUrl);
+      const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error || "Character sync is unavailable right now.")
+        throw new Error(
+          payload.error || "Character sync is unavailable right now.",
+        );
       }
 
-      setCharacterResults(payload.characters || [])
+      setCharacterResults(payload.characters || []);
       setCharacterStatus({
         tone: payload.characters?.length ? "success" : "muted",
         message: payload.characters?.length
           ? `Found ${payload.characters.length} possible character${payload.characters.length === 1 ? "" : "s"}.`
           : "No matching characters were found. Try a broader search or a different world.",
-      })
+      });
     } catch (error) {
-      setCharacterResults([])
-      setCharacterStatus({ tone: "error", message: error.message })
+      setCharacterResults([]);
+      setCharacterStatus({ tone: "error", message: error.message });
     } finally {
-      setIsSearchingCharacters(false)
+      setIsSearchingCharacters(false);
     }
   }
 
   async function syncCharacterMounts(character, { closeModal = false } = {}) {
-    setIsSyncingCharacter(true)
-    setCharacterStatus({ tone: "idle", message: "" })
-    setCharacterPanelStatus({ tone: "idle", message: "" })
+    setIsSyncingCharacter(true);
+    setCharacterStatus({ tone: "idle", message: "" });
+    setCharacterPanelStatus({ tone: "idle", message: "" });
 
     try {
-      const mountUrl = new URL(config.syncEndpoint, window.location.origin)
-      mountUrl.searchParams.set("id", character.id)
+      const mountUrl = new URL(config.syncEndpoint, window.location.origin);
+      mountUrl.searchParams.set("id", character.id);
 
-      const response = await fetch(mountUrl, { cache: "no-store" })
-      const payload = await response.json()
+      const response = await fetch(mountUrl, { cache: "no-store" });
+      const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error || "Character sync is unavailable right now.")
+        throw new Error(
+          payload.error || "Character sync is unavailable right now.",
+        );
       }
 
       setCharacterSyncState({
         character,
         ownedMountIds: payload.ownedMountIds || [],
         ownedMountNames: payload.ownedMountNames || [],
-      })
+      });
       setCharacterStatus({
         tone: "success",
         message: `${character.name} synced successfully.`,
-      })
+      });
       setCharacterPanelStatus({
         tone: "success",
         message: `${character.name} refreshed: ${(payload.ownedMountIds || []).length}/${totalMountCount} ${config.pluralLabel} owned.`,
-      })
+      });
 
       if (closeModal) {
-        setShowCharacterSync(false)
+        setShowCharacterSync(false);
       }
     } catch (error) {
-      setCharacterStatus({ tone: "error", message: error.message })
-      setCharacterPanelStatus({ tone: "error", message: error.message })
+      setCharacterStatus({ tone: "error", message: error.message });
+      setCharacterPanelStatus({ tone: "error", message: error.message });
     } finally {
-      setIsSyncingCharacter(false)
+      setIsSyncingCharacter(false);
     }
   }
 
   async function handleCharacterSync(character) {
-    await syncCharacterMounts(character, { closeModal: true })
+    await syncCharacterMounts(character, { closeModal: true });
   }
 
   async function refreshCharacterSync() {
     if (!syncedCharacter) {
-      return
+      return;
     }
 
-    await syncCharacterMounts(syncedCharacter)
+    await syncCharacterMounts(syncedCharacter);
   }
 
   function clearCharacterSync() {
-    setCharacterSyncState(EMPTY_CHARACTER_SYNC_STATE)
-    setCharacterForm(DEFAULT_CHARACTER_FORM)
-    setOwnedFilter("all")
-    setCharacterResults([])
-    setCharacterStatus({ tone: "idle", message: "" })
-    setCharacterPanelStatus({ tone: "muted", message: "Character sync cleared." })
+    setCharacterSyncState(EMPTY_CHARACTER_SYNC_STATE);
+    setCharacterForm(DEFAULT_CHARACTER_FORM);
+    setOwnedFilter("all");
+    setCharacterResults([]);
+    setCharacterStatus({ tone: "idle", message: "" });
+    setCharacterPanelStatus({
+      tone: "muted",
+      message: "Character sync cleared.",
+    });
   }
 
   function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const selectedMountExpansion = selectedMount ? getExpansion(selectedMount.patch) : null
-  const selectedMountSourceType = selectedMount ? getCollectableType(selectedMount, config) : "Unknown"
-  const selectedMountIsFavorite = selectedMount ? favoriteMountIdSet.has(selectedMount.id) : false
-  const selectedMountVerminion = selectedMount?.verminion || null
-  const selectedMountRaceName = selectedMount?.race?.name || null
-  const detailCardClassName = getDetailCardClassName(config.typeGroupVariant)
-  const availableDataCenters = getDataCentersByRegion(characterForm.region)
-  const availableWorlds = getWorldsByDataCenter(characterForm.dataCenter)
-  const visibleCharacterResults = characterResults.slice(0, INITIAL_CHARACTER_RESULTS_COUNT)
+  const selectedMountExpansion = selectedMount
+    ? getExpansion(selectedMount.patch)
+    : null;
+  const selectedMountSourceType = selectedMount
+    ? getCollectableType(selectedMount, config)
+    : "Unknown";
+  const selectedMountIsFavorite = selectedMount
+    ? favoriteMountIdSet.has(selectedMount.id)
+    : false;
+  const selectedMountIsAchievement = config.typeGroupVariant === "achievements";
+  const selectedMountVerminion = selectedMount?.verminion || null;
+  const selectedMountRaceName = selectedMount?.race?.name || null;
+  const detailCardClassName = getDetailCardClassName(config.typeGroupVariant);
+  const availableDataCenters = getDataCentersByRegion(characterForm.region);
+  const availableWorlds = getWorldsByDataCenter(characterForm.dataCenter);
+  const visibleCharacterResults = characterResults.slice(
+    0,
+    INITIAL_CHARACTER_RESULTS_COUNT,
+  );
 
   return (
     <>
@@ -579,11 +697,22 @@ function CollectionPage({ config }) {
           aria-labelledby="mount-detail-title"
           onClick={closeMountDetails}
         >
-          <div className={detailCardClassName} onClick={(event) => event.stopPropagation()}>
+          <div
+            className={detailCardClassName}
+            onClick={(event) => event.stopPropagation()}
+          >
             <button
-              className={selectedMountIsFavorite ? "mount-detail-favorite active" : "mount-detail-favorite"}
+              className={
+                selectedMountIsFavorite
+                  ? "mount-detail-favorite active"
+                  : "mount-detail-favorite"
+              }
               onClick={() => toggleFavoriteMount(selectedMount.id)}
-              aria-label={selectedMountIsFavorite ? "Remove from favorites" : "Add to favorites"}
+              aria-label={
+                selectedMountIsFavorite
+                  ? "Remove from favorites"
+                  : "Add to favorites"
+              }
               aria-pressed={selectedMountIsFavorite}
               type="button"
             >
@@ -610,7 +739,10 @@ function CollectionPage({ config }) {
                 </span>
                 <span className="mount-detail-badge mount-detail-type-badge">
                   <img
-                    src={SOURCE_ICONS[selectedMountSourceType] || "/icons/unknown.png"}
+                    src={
+                      SOURCE_ICONS[selectedMountSourceType] ||
+                      "/icons/unknown.png"
+                    }
                     alt=""
                     aria-hidden="true"
                   />
@@ -620,134 +752,193 @@ function CollectionPage({ config }) {
 
               <div className="mount-detail-title-row">
                 <div className="mount-detail-icon">
-                  <img src={selectedMount.icon || selectedMount.image} alt="" aria-hidden="true" />
+                  <img
+                    src={selectedMount.icon || selectedMount.image}
+                    alt=""
+                    aria-hidden="true"
+                  />
                 </div>
 
                 <div className="mount-detail-title-group">
                   <h2 id="mount-detail-title">{selectedMount.name}</h2>
-                  <p className="mount-detail-subtitle">{getDetailSubtitle(selectedMount, config)}</p>
+                  <p className="mount-detail-subtitle">
+                    {getDetailSubtitle(selectedMount, config)}
+                  </p>
                   {selectedMount.description ? (
-                    <p className="mount-detail-description">{selectedMount.description}</p>
+                    <p className="mount-detail-description">
+                      {selectedMount.description}
+                    </p>
                   ) : null}
-                </div>
-              </div>
-
-            </div>
-
-            <div className="mount-detail-body">
-              <div className="mount-detail-image">
-                <img src={getCollectableImage(selectedMount)} alt={selectedMount.name} />
-              </div>
-
-              <div className="mount-detail-info">
-                <div className="mount-detail-owned">
-                  {config.ownershipLabel || "Owned by:"} <strong>{selectedMount.owned}</strong>
-                  {syncedCharacter ? (
-                    <p className="mount-detail-character-status">
-                      {syncedCharacter.name}: <strong>{isMountOwned(selectedMount, syncedCharacter, ownedMountIdSet, ownedMountNameSet) ? "Owned" : "Missing"}</strong>
+                  {selectedMountIsAchievement ? (
+                    <p className="achievement-detail-earned">
+                      {config.ownershipLabel || "Earned by:"}{" "}
+                      <strong>{selectedMount.owned}</strong>
                     </p>
                   ) : null}
                 </div>
+              </div>
+            </div>
 
-                {selectedMountVerminion ? (
-                  <details className="minion-verminion-panel">
-                    <summary className="minion-verminion-header">
-                      <h3>Lord of Verminion</h3>
-                      {selectedMountRaceName ? (
-                        <span>{selectedMountRaceName}</span>
-                      ) : null}
-                    </summary>
+            {selectedMountIsAchievement ? null : (
+              <div className="mount-detail-body">
+                <div className="mount-detail-image">
+                  <img
+                    src={getCollectableImage(selectedMount)}
+                    alt={selectedMount.name}
+                  />
+                </div>
 
-                    <div className="minion-verminion-content">
-                      <dl className="minion-verminion-stats">
-                        {getVerminionStats(selectedMountVerminion).map((stat) => (
-                          <div key={stat.key}>
-                            <dt>{stat.label}</dt>
-                            <dd>
-                              {stat.key === "speed" ? (
-                                <span
-                                  className="minion-verminion-speed"
-                                  aria-label={`${stat.value} out of 4 speed`}
-                                >
-                                  {Array.from({ length: 4 }).map((_, index) => (
+                <div className="mount-detail-info">
+                  <div className="mount-detail-owned">
+                    {config.ownershipLabel || "Owned by:"}{" "}
+                    <strong>{selectedMount.owned}</strong>
+                    {syncedCharacter ? (
+                      <p className="mount-detail-character-status">
+                        {syncedCharacter.name}:{" "}
+                        <strong>
+                          {isMountOwned(
+                            selectedMount,
+                            syncedCharacter,
+                            ownedMountIdSet,
+                            ownedMountNameSet,
+                          )
+                            ? "Owned"
+                            : "Missing"}
+                        </strong>
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {selectedMountVerminion ? (
+                    <details className="minion-verminion-panel">
+                      <summary className="minion-verminion-header">
+                        <h3>Lord of Verminion</h3>
+                        {selectedMountRaceName ? (
+                          <span>{selectedMountRaceName}</span>
+                        ) : null}
+                      </summary>
+
+                      <div className="minion-verminion-content">
+                        <dl className="minion-verminion-stats">
+                          {getVerminionStats(selectedMountVerminion).map(
+                            (stat) => (
+                              <div key={stat.key}>
+                                <dt>{stat.label}</dt>
+                                <dd>
+                                  {stat.key === "speed" ? (
                                     <span
-                                      key={index}
-                                      className={index < stat.value ? "active" : ""}
-                                    />
-                                  ))}
-                                </span>
-                              ) : (
-                                stat.value
-                              )}
-                            </dd>
-                          </div>
-                        ))}
-                      </dl>
+                                      className="minion-verminion-speed"
+                                      aria-label={`${stat.value} out of 4 speed`}
+                                    >
+                                      {Array.from({ length: 4 }).map(
+                                        (_, index) => (
+                                          <span
+                                            key={index}
+                                            className={
+                                              index < stat.value ? "active" : ""
+                                            }
+                                          />
+                                        ),
+                                      )}
+                                    </span>
+                                  ) : (
+                                    stat.value
+                                  )}
+                                </dd>
+                              </div>
+                            ),
+                          )}
+                        </dl>
 
-                      <div className="minion-verminion-meta">
-                        {typeof selectedMountVerminion.area_attack === "boolean" ? (
-                          <div>
-                            <span>Auto-attack</span>
-                            <strong>{getVerminionAutoAttack(selectedMountVerminion)}</strong>
-                          </div>
-                        ) : null}
-
-                        {getVerminionStrengths(selectedMountVerminion).length > 0 ? (
-                          <div>
-                            <span>Strengths</span>
-                            <div className="minion-verminion-strengths">
-                              {getVerminionStrengths(selectedMountVerminion).map((strength) => (
-                                <strong key={strength}>{strength}</strong>
-                              ))}
+                        <div className="minion-verminion-meta">
+                          {typeof selectedMountVerminion.area_attack ===
+                          "boolean" ? (
+                            <div>
+                              <span>Auto-attack</span>
+                              <strong>
+                                {getVerminionAutoAttack(selectedMountVerminion)}
+                              </strong>
                             </div>
-                          </div>
-                        ) : null}
-                      </div>
+                          ) : null}
 
-                      {selectedMountVerminion.skill ? (
-                        <div className="minion-verminion-skill">
-                          <strong>{selectedMountVerminion.skill}</strong>
-                          {selectedMountVerminion.skill_description ? (
-                            <p>{formatVerminionSkillDescription(selectedMountVerminion.skill_description)}</p>
+                          {getVerminionStrengths(selectedMountVerminion)
+                            .length > 0 ? (
+                            <div>
+                              <span>Strengths</span>
+                              <div className="minion-verminion-strengths">
+                                {getVerminionStrengths(
+                                  selectedMountVerminion,
+                                ).map((strength) => (
+                                  <strong key={strength}>{strength}</strong>
+                                ))}
+                              </div>
+                            </div>
                           ) : null}
                         </div>
-                      ) : null}
 
-                      <div className="minion-verminion-footer">
-                        {Number.isFinite(selectedMountVerminion.skill_cost) ? (
-                          <div>
-                            <span>Points</span>
-                            <strong>{selectedMountVerminion.skill_cost}</strong>
+                        {selectedMountVerminion.skill ? (
+                          <div className="minion-verminion-skill">
+                            <strong>{selectedMountVerminion.skill}</strong>
+                            {selectedMountVerminion.skill_description ? (
+                              <p>
+                                {formatVerminionSkillDescription(
+                                  selectedMountVerminion.skill_description,
+                                )}
+                              </p>
+                            ) : null}
                           </div>
                         ) : null}
 
-                        {getVerminionSkillTypeName(selectedMountVerminion) ? (
-                          <div>
-                            <span>Special Type</span>
-                            <strong>{getVerminionSkillTypeName(selectedMountVerminion)}</strong>
-                          </div>
-                        ) : null}
+                        <div className="minion-verminion-footer">
+                          {Number.isFinite(
+                            selectedMountVerminion.skill_cost,
+                          ) ? (
+                            <div>
+                              <span>Points</span>
+                              <strong>
+                                {selectedMountVerminion.skill_cost}
+                              </strong>
+                            </div>
+                          ) : null}
+
+                          {getVerminionSkillTypeName(selectedMountVerminion) ? (
+                            <div>
+                              <span>Special Type</span>
+                              <strong>
+                                {getVerminionSkillTypeName(
+                                  selectedMountVerminion,
+                                )}
+                              </strong>
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  </details>
-                ) : null}
+                    </details>
+                  ) : null}
 
-                {config.typeGroupVariant === "achievements" ? (
-                  <AchievementDetailSection achievement={selectedMount} />
-                ) : (
                   <div className="mount-detail-section">
                     <h3>How to Get It</h3>
 
                     <div className="mount-detail-sources">
                       {getSourceList(selectedMount).map((source, index) => {
-                        const sourceLinks = getSourceLinks(source, selectedMount)
-                        const primarySourceLink = getPrimarySourceLink(sourceLinks)
+                        const sourceLinks = getSourceLinks(
+                          source,
+                          selectedMount,
+                        );
+                        const primarySourceLink =
+                          getPrimarySourceLink(sourceLinks);
 
                         return (
-                          <div key={`${selectedMount.id}-${source.type}-${index}`} className="mount-detail-source">
+                          <div
+                            key={`${selectedMount.id}-${source.type}-${index}`}
+                            className="mount-detail-source"
+                          >
                             <div className="mount-detail-source-header">
                               <img
-                                src={SOURCE_ICONS[source.type] || "/icons/unknown.png"}
+                                src={
+                                  SOURCE_ICONS[source.type] ||
+                                  "/icons/unknown.png"
+                                }
                                 alt={source.type}
                               />
                               <span>{source.type}</span>
@@ -757,13 +948,23 @@ function CollectionPage({ config }) {
                               <a
                                 className="mount-detail-source-copy mount-detail-source-copy-link"
                                 href={primarySourceLink.href}
-                                target={primarySourceLink.external === false ? undefined : "_blank"}
-                                rel={primarySourceLink.external === false ? undefined : "noreferrer"}
+                                target={
+                                  primarySourceLink.external === false
+                                    ? undefined
+                                    : "_blank"
+                                }
+                                rel={
+                                  primarySourceLink.external === false
+                                    ? undefined
+                                    : "noreferrer"
+                                }
                               >
                                 {source.text}
                               </a>
                             ) : (
-                              <p className="mount-detail-source-copy">{source.text}</p>
+                              <p className="mount-detail-source-copy">
+                                {source.text}
+                              </p>
                             )}
 
                             {sourceLinks.length > 0 ? (
@@ -773,8 +974,16 @@ function CollectionPage({ config }) {
                                     key={`${selectedMount.id}-${source.type}-${link.label}-${link.href}`}
                                     className="mount-detail-source-pill"
                                     href={link.href}
-                                    target={link.external === false ? undefined : "_blank"}
-                                    rel={link.external === false ? undefined : "noreferrer"}
+                                    target={
+                                      link.external === false
+                                        ? undefined
+                                        : "_blank"
+                                    }
+                                    rel={
+                                      link.external === false
+                                        ? undefined
+                                        : "noreferrer"
+                                    }
                                   >
                                     {link.label}
                                   </a>
@@ -782,13 +991,13 @@ function CollectionPage({ config }) {
                               </div>
                             ) : null}
                           </div>
-                        )
+                        );
                       })}
                     </div>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       ) : null}
@@ -801,7 +1010,10 @@ function CollectionPage({ config }) {
           aria-labelledby="character-sync-title"
           onClick={() => setShowCharacterSync(false)}
         >
-          <div className="character-sync-card" onClick={(event) => event.stopPropagation()}>
+          <div
+            className="character-sync-card"
+            onClick={(event) => event.stopPropagation()}
+          >
             <button
               className="character-sync-close"
               onClick={() => setShowCharacterSync(false)}
@@ -815,7 +1027,9 @@ function CollectionPage({ config }) {
               <p className="character-sync-eyebrow">Character Sync</p>
               <h2 id="character-sync-title">Find your character</h2>
               <p className="character-sync-copy">
-                Search by region, data center, world, and full or partial character name, then sync owned {config.pluralLabel} from FFXIV Collect.
+                Search by region, data center, world, and full or partial
+                character name, then sync owned {config.pluralLabel} from FFXIV
+                Collect.
               </p>
               <p className="character-sync-warning">
                 If your{" "}
@@ -825,17 +1039,24 @@ function CollectionPage({ config }) {
                   rel="noreferrer"
                 >
                   Lodestone
-                </a>
-                {" "}achievements or {config.singularLabel}-related visibility settings are private, some {config.pluralLabel} may not show as owned until those settings are made public there.
+                </a>{" "}
+                achievements or {config.singularLabel}-related visibility
+                settings are private, some {config.pluralLabel} may not show as
+                owned until those settings are made public there.
               </p>
             </div>
 
-            <form className="character-sync-form" onSubmit={handleCharacterSearch}>
+            <form
+              className="character-sync-form"
+              onSubmit={handleCharacterSearch}
+            >
               <label className="character-sync-field">
                 <span>Region</span>
                 <select
                   value={characterForm.region}
-                  onChange={(event) => handleCharacterFieldChange("region", event.target.value)}
+                  onChange={(event) =>
+                    handleCharacterFieldChange("region", event.target.value)
+                  }
                 >
                   <option value="">All Regions</option>
                   {REGIONS.map((region) => (
@@ -850,7 +1071,9 @@ function CollectionPage({ config }) {
                 <span>Data Center</span>
                 <select
                   value={characterForm.dataCenter}
-                  onChange={(event) => handleCharacterFieldChange("dataCenter", event.target.value)}
+                  onChange={(event) =>
+                    handleCharacterFieldChange("dataCenter", event.target.value)
+                  }
                 >
                   <option value="">All Data Centers</option>
                   {availableDataCenters.map((dataCenter) => (
@@ -865,7 +1088,9 @@ function CollectionPage({ config }) {
                 <span>World</span>
                 <select
                   value={characterForm.world}
-                  onChange={(event) => handleCharacterFieldChange("world", event.target.value)}
+                  onChange={(event) =>
+                    handleCharacterFieldChange("world", event.target.value)
+                  }
                 >
                   <option value="">All Worlds</option>
                   {availableWorlds.map((world) => (
@@ -881,20 +1106,28 @@ function CollectionPage({ config }) {
                 <input
                   type="search"
                   value={characterForm.name}
-                  onChange={(event) => handleCharacterFieldChange("name", event.target.value)}
+                  onChange={(event) =>
+                    handleCharacterFieldChange("name", event.target.value)
+                  }
                   placeholder="Enter a character name"
                 />
               </label>
 
               <div className="character-sync-actions">
-                <button className="character-sync-button" type="submit" disabled={isSearchingCharacters}>
+                <button
+                  className="character-sync-button"
+                  type="submit"
+                  disabled={isSearchingCharacters}
+                >
                   {isSearchingCharacters ? "Searching..." : "Search"}
                 </button>
               </div>
             </form>
 
             {characterStatus.message ? (
-              <p className={`character-sync-status character-sync-status-${characterStatus.tone}`}>
+              <p
+                className={`character-sync-status character-sync-status-${characterStatus.tone}`}
+              >
                 {characterStatus.message}
               </p>
             ) : null}
@@ -907,9 +1140,14 @@ function CollectionPage({ config }) {
                   <div className="character-result-copy">
                     <h3>{character.name}</h3>
                     <p>
-                      {character.world} - {character.dataCenter} - {getRegionLabel(character.region)}
+                      {character.world} - {character.dataCenter} -{" "}
+                      {getRegionLabel(character.region)}
                     </p>
-                    <span>{character.source === "lodestone" ? "Lodestone search" : "FFXIV Collect search"}</span>
+                    <span>
+                      {character.source === "lodestone"
+                        ? "Lodestone search"
+                        : "FFXIV Collect search"}
+                    </span>
                   </div>
 
                   <button
@@ -936,18 +1174,25 @@ function CollectionPage({ config }) {
               <div className="page-header-copy">
                 <h1>{config.title}</h1>
                 <p className="page-header-character">
-                  {syncedCharacter.name} - {syncedCharacter.world} - {ownedMountCount}/{totalMountCount} {config.pluralLabel} owned
+                  {syncedCharacter.name} - {syncedCharacter.world} -{" "}
+                  {ownedMountCount}/{totalMountCount} {config.pluralLabel} owned
                 </p>
               </div>
 
               <div className="character-summary-stack">
                 <div className="character-summary-card">
                   <div className="character-summary-main">
-                    <img src={syncedCharacter.avatar} alt="" aria-hidden="true" />
+                    <img
+                      src={syncedCharacter.avatar}
+                      alt=""
+                      aria-hidden="true"
+                    />
                     <div className="character-summary-copy">
                       <strong>{syncedCharacter.name}</strong>
                       <span>{getRegionLabel(syncedCharacter.region)}</span>
-                      <span>{syncedCharacter.dataCenter} / {syncedCharacter.world}</span>
+                      <span>
+                        {syncedCharacter.dataCenter} / {syncedCharacter.world}
+                      </span>
                     </div>
                   </div>
 
@@ -984,7 +1229,9 @@ function CollectionPage({ config }) {
                 </div>
 
                 {characterPanelStatus.message ? (
-                  <p className={`character-summary-status character-summary-status-${characterPanelStatus.tone}`}>
+                  <p
+                    className={`character-summary-status character-summary-status-${characterPanelStatus.tone}`}
+                  >
                     {characterPanelStatus.message}
                   </p>
                 ) : null}
@@ -996,7 +1243,10 @@ function CollectionPage({ config }) {
               <p className="page-header-character page-header-character-muted">
                 Sync a character to highlight owned {config.pluralLabel}.
               </p>
-              <button className="character-launch-button page-header-launch-button" onClick={openCharacterSyncModal}>
+              <button
+                className="character-launch-button page-header-launch-button"
+                onClick={openCharacterSyncModal}
+              >
                 Sync Character
               </button>
             </div>
@@ -1038,14 +1288,19 @@ function CollectionPage({ config }) {
                           : "collection-filter-button"
                       }
                       onClick={() =>
-                        setOwnedFilter((currentValue) => (currentValue === "owned" ? "all" : "owned"))
+                        setOwnedFilter((currentValue) =>
+                          currentValue === "owned" ? "all" : "owned",
+                        )
                       }
                       title={`Show owned ${config.pluralLabel}`}
                       aria-label={`Show owned ${config.pluralLabel}`}
                       aria-pressed={ownedFilter === "owned"}
                       type="button"
                     >
-                      <span className="collection-filter-icon collection-filter-icon-owned" aria-hidden="true" />
+                      <span
+                        className="collection-filter-icon collection-filter-icon-owned"
+                        aria-hidden="true"
+                      />
                     </button>
                   ) : null}
                   {syncedCharacter ? (
@@ -1056,25 +1311,39 @@ function CollectionPage({ config }) {
                           : "collection-filter-button"
                       }
                       onClick={() =>
-                        setOwnedFilter((currentValue) => (currentValue === "unowned" ? "all" : "unowned"))
+                        setOwnedFilter((currentValue) =>
+                          currentValue === "unowned" ? "all" : "unowned",
+                        )
                       }
                       title={`Show missing ${config.pluralLabel}`}
                       aria-label={`Show missing ${config.pluralLabel}`}
                       aria-pressed={ownedFilter === "unowned"}
                       type="button"
                     >
-                      <span className="collection-filter-icon collection-filter-icon-unowned" aria-hidden="true" />
+                      <span
+                        className="collection-filter-icon collection-filter-icon-unowned"
+                        aria-hidden="true"
+                      />
                     </button>
                   ) : null}
                   <button
-                    className={showFavoritesOnly ? "collection-filter-button active" : "collection-filter-button"}
-                    onClick={() => setShowFavoritesOnly((currentValue) => !currentValue)}
+                    className={
+                      showFavoritesOnly
+                        ? "collection-filter-button active"
+                        : "collection-filter-button"
+                    }
+                    onClick={() =>
+                      setShowFavoritesOnly((currentValue) => !currentValue)
+                    }
                     title={`Show favorite ${config.pluralLabel}`}
                     aria-label={`Show favorite ${config.pluralLabel}`}
                     aria-pressed={showFavoritesOnly}
                     type="button"
                   >
-                    <span className="collection-filter-icon collection-filter-icon-favorite" aria-hidden="true" />
+                    <span
+                      className="collection-filter-icon collection-filter-icon-favorite"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
               </div>
@@ -1083,7 +1352,11 @@ function CollectionPage({ config }) {
                 <div className="filter-heading">
                   <h3>Type</h3>
                   <button
-                    className={selectedTypes.length === 0 ? "reset-filter-button active" : "reset-filter-button"}
+                    className={
+                      selectedTypes.length === 0
+                        ? "reset-filter-button active"
+                        : "reset-filter-button"
+                    }
                     onClick={() => setSelectedTypes([])}
                     type="button"
                   >
@@ -1100,12 +1373,26 @@ function CollectionPage({ config }) {
                         {group.types.map((type) => (
                           <button
                             key={type}
-                            className={selectedTypes.includes(type) ? "filter-button type-button active" : "filter-button type-button"}
-                            onClick={() => toggleSelection(type, selectedTypes, setSelectedTypes)}
+                            className={
+                              selectedTypes.includes(type)
+                                ? "filter-button type-button active"
+                                : "filter-button type-button"
+                            }
+                            onClick={() =>
+                              toggleSelection(
+                                type,
+                                selectedTypes,
+                                setSelectedTypes,
+                              )
+                            }
                             title={type}
                             type="button"
                           >
-                            <img src={SOURCE_ICONS[type]} alt="" aria-hidden="true" />
+                            <img
+                              src={SOURCE_ICONS[type]}
+                              alt=""
+                              aria-hidden="true"
+                            />
                           </button>
                         ))}
                       </div>
@@ -1118,7 +1405,11 @@ function CollectionPage({ config }) {
                 <div className="filter-heading">
                   <h3>Expansion</h3>
                   <button
-                    className={selectedExpansions.length === 0 ? "reset-filter-button active" : "reset-filter-button"}
+                    className={
+                      selectedExpansions.length === 0
+                        ? "reset-filter-button active"
+                        : "reset-filter-button"
+                    }
                     onClick={() => setSelectedExpansions([])}
                     type="button"
                   >
@@ -1137,15 +1428,15 @@ function CollectionPage({ config }) {
                       }
                       title={expansion.fullName}
                       onClick={() =>
-                        toggleSelection(expansion.code, selectedExpansions, setSelectedExpansions)
+                        toggleSelection(
+                          expansion.code,
+                          selectedExpansions,
+                          setSelectedExpansions,
+                        )
                       }
                       type="button"
                     >
-                      <img
-                        src={expansion.icon}
-                        alt=""
-                        aria-hidden="true"
-                      />
+                      <img src={expansion.icon} alt="" aria-hidden="true" />
                       <span className="expansion-label">{expansion.label}</span>
                     </button>
                   ))}
@@ -1159,7 +1450,8 @@ function CollectionPage({ config }) {
               <div className="mount-empty-state">
                 <h2>No favorite {config.pluralLabel} yet</h2>
                 <p>
-                  Your favorite {config.pluralLabel} will show up here. Favorite a {config.singularLabel} to save it locally on this device.
+                  Your favorite {config.pluralLabel} will show up here. Favorite
+                  a {config.singularLabel} to save it locally on this device.
                 </p>
                 {config.emptyStateTutorial ? (
                   <img
@@ -1173,74 +1465,97 @@ function CollectionPage({ config }) {
               <div className="mount-empty-state">
                 <h2>No favorites match these filters</h2>
                 <p>
-                  Try clearing a few filters or turn off favorites-only mode to see more {config.pluralLabel} again.
+                  Try clearing a few filters or turn off favorites-only mode to
+                  see more {config.pluralLabel} again.
                 </p>
               </div>
             ) : showOwnedEmptyState ? (
               <div className="mount-empty-state">
                 <h2>No {config.pluralLabel} owned yet</h2>
                 <p>
-                  This character does not have any synced {config.pluralLabel} yet. Happy collecting!
+                  This character does not have any synced {config.pluralLabel}{" "}
+                  yet. Happy collecting!
                 </p>
               </div>
             ) : null}
-            {!showFavoritesEmptyState && !showFavoritesFilteredEmptyState && !showOwnedEmptyState ? (
-            <div className="mount-grid">
-              {filteredMounts.map((mount) => (
-                <div
-                  key={mount.id}
-                  className={getMountCardClassName(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet, config.cardClassName)}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => openMountDetails(mount)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault()
-                      openMountDetails(mount)
-                    }
-                  }}
-                >
-                  {favoriteMountIdSet.has(mount.id) ? (
-                    <span className="mount-card-favorite" aria-label="Favorited" title="Favorited">
-                      ★
-                    </span>
-                  ) : null}
-                  <div className="mount-patch">
-                    <img
-                      src={
-                        getExpansionIcon(
-                          getExpansion(mount.patch)
-                        )
+            {!showFavoritesEmptyState &&
+            !showFavoritesFilteredEmptyState &&
+            !showOwnedEmptyState ? (
+              <div className="mount-grid">
+                {filteredMounts.map((mount) => (
+                  <div
+                    key={mount.id}
+                    className={getMountCardClassName(
+                      mount,
+                      syncedCharacter,
+                      ownedMountIdSet,
+                      ownedMountNameSet,
+                      config.cardClassName,
+                    )}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openMountDetails(mount)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openMountDetails(mount);
                       }
-                    />
-                  </div>
-                  <h2>{mount.name}</h2>
-                  <div className="mount-image">
-                    <img src={getCollectableImage(mount)} alt="" aria-hidden="true" />
-                  </div>
-                  <div className="mount-owned">
-                    <h4>{config.ownershipLabel || "Owned by:"} {mount.owned}</h4>
-                    {syncedCharacter ? (
-                      <p className="mount-character-status">
-                        {isMountOwned(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet) ? "Owned" : "Missing"}
-                      </p>
+                    }}
+                  >
+                    {favoriteMountIdSet.has(mount.id) ? (
+                      <span
+                        className="mount-card-favorite"
+                        aria-label="Favorited"
+                        title="Favorited"
+                      >
+                        ★
+                      </span>
                     ) : null}
-                  </div>
+                    <div className="mount-patch">
+                      <img src={getExpansionIcon(getExpansion(mount.patch))} />
+                    </div>
+                    <h2>{mount.name}</h2>
+                    <div className="mount-image">
+                      <img
+                        src={getCollectableImage(mount)}
+                        alt=""
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="mount-owned">
+                      <h4>
+                        {config.ownershipLabel || "Owned by:"} {mount.owned}
+                      </h4>
+                      {syncedCharacter ? (
+                        <p className="mount-character-status">
+                          {isMountOwned(
+                            mount,
+                            syncedCharacter,
+                            ownedMountIdSet,
+                            ownedMountNameSet,
+                          )
+                            ? "Owned"
+                            : "Missing"}
+                        </p>
+                      ) : null}
+                    </div>
 
-                  <div className="source-mount">
-                    <img
-                      src={
-                        SOURCE_ICONS[getCollectableType(mount, config)] ||
-                        "/icons/unknown.png"
-                      }
-                      alt=""
-                      aria-hidden="true"
-                    />
-                    <p className="source-text">{getCollectableSourceText(mount, config)}</p>
+                    <div className="source-mount">
+                      <img
+                        src={
+                          SOURCE_ICONS[getCollectableType(mount, config)] ||
+                          "/icons/unknown.png"
+                        }
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <p className="source-text">
+                        {getCollectableSourceText(mount, config)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             ) : null}
           </main>
         </div>
@@ -1259,130 +1574,85 @@ function CollectionPage({ config }) {
         </button>
       ) : null}
     </>
-  )
-}
-
-function AchievementDetailSection({ achievement }) {
-  return (
-    <div className="mount-detail-section achievement-detail-section">
-      <h3>Achievement Details</h3>
-
-      <div className="achievement-detail-stats">
-        <div>
-          <span>Points</span>
-          <strong>{achievement.points ?? 0}</strong>
-        </div>
-        <div>
-          <span>Category</span>
-          <strong>{achievement.category?.name || "Unknown"}</strong>
-        </div>
-        <div>
-          <span>Order</span>
-          <strong>{achievement.order ?? "Unknown"}</strong>
-        </div>
-      </div>
-
-      <div className="mount-detail-sources">
-        <div className="mount-detail-source">
-          <div className="mount-detail-source-header">
-            <img src={SOURCE_ICONS[getAchievementType(achievement)] || "/icons/achievement.png"} alt="" aria-hidden="true" />
-            <span>{getAchievementType(achievement)}</span>
-          </div>
-          <p className="mount-detail-source-copy">{achievement.description || "No achievement description available."}</p>
-          <div className="mount-detail-source-links">
-            <a
-              className="mount-detail-source-pill"
-              href={`#/achievements/${achievement.id}`}
-            >
-              Site Link
-            </a>
-            <a
-              className="mount-detail-source-pill"
-              href={`https://ffxivcollect.com/achievements/${achievement.id}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              FFXIV Collect
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  );
 }
 
 function getTypeGroups(typeGroupVariant) {
   if (typeGroupVariant === "minions") {
-    return MINION_TYPE_GROUPS
+    return MINION_TYPE_GROUPS;
   }
 
   if (typeGroupVariant === "achievements") {
-    return ACHIEVEMENT_TYPE_GROUPS
+    return ACHIEVEMENT_TYPE_GROUPS;
   }
 
-  return MOUNT_TYPE_GROUPS
+  return MOUNT_TYPE_GROUPS;
 }
 
 function getDetailCardClassName(typeGroupVariant) {
   if (typeGroupVariant === "minions") {
-    return "mount-detail-card minion-detail-card"
+    return "mount-detail-card minion-detail-card";
   }
 
   if (typeGroupVariant === "achievements") {
-    return "mount-detail-card achievement-detail-card"
+    return "mount-detail-card achievement-detail-card";
   }
 
-  return "mount-detail-card"
+  return "mount-detail-card";
 }
 
 function getDetailIdFromHash(hashValue, collectionKey) {
-  const normalizedHash = hashValue.replace(/^#\/?/, "").trim().toLowerCase()
-  const detailMatch = normalizedHash.match(new RegExp(`^${collectionKey}/(\\d+)$`))
+  const normalizedHash = hashValue.replace(/^#\/?/, "").trim().toLowerCase();
+  const detailMatch = normalizedHash.match(
+    new RegExp(`^${collectionKey}/(\\d+)$`),
+  );
 
-  return detailMatch ? Number(detailMatch[1]) : null
+  return detailMatch ? Number(detailMatch[1]) : null;
 }
 
 function setRouteHash(pathname) {
-  window.history.pushState(null, "", `#${pathname}`)
-  window.dispatchEvent(new HashChangeEvent("hashchange"))
+  window.history.pushState(null, "", `#${pathname}`);
+  window.dispatchEvent(new HashChangeEvent("hashchange"));
 }
 
 function getCollectableType(collectable, config) {
   if (config.typeGroupVariant === "achievements") {
-    return getAchievementType(collectable)
+    return getAchievementType(collectable);
   }
 
-  return getPrimarySource(collectable).type
+  return getPrimarySource(collectable).type;
 }
 
 function getCollectableSourceText(collectable, config) {
   if (config.typeGroupVariant === "achievements") {
-    return collectable.category?.name || collectable.description || "Achievement"
+    return (
+      collectable.category?.name || collectable.description || "Achievement"
+    );
   }
 
-  return getPrimarySource(collectable).text
+  return getPrimarySource(collectable).text;
 }
 
 function getCollectableImage(collectable) {
-  return collectable.image || collectable.icon || "/icons/achievement.png"
+  return collectable.image || collectable.icon || "/icons/achievement.png";
 }
 
 function getDetailSubtitle(collectable, config) {
-  const patchText = `Patch ${collectable.patch || "Unknown"}`
+  const patchText = `Patch ${collectable.patch || "Unknown"}`;
 
   if (config.typeGroupVariant === "achievements") {
-    return `${patchText} - ${collectable.points ?? 0} points`
+    return `${patchText} - ${collectable.points ?? 0} points`;
   }
 
-  return patchText
+  return patchText;
 }
 
 function getAchievementType(achievement) {
-  return achievement.type?.name || "Achievement"
+  return achievement.type?.name || "Achievement";
 }
 
 function getPrimarySource(mount) {
-  return getSourceList(mount)[0]
+  return getSourceList(mount)[0];
 }
 
 function getVerminionStats(verminion) {
@@ -1392,11 +1662,11 @@ function getVerminionStats(verminion) {
     { key: "defense", label: "DEF", value: verminion.defense },
     { key: "speed", label: "SPD", value: verminion.speed },
     { key: "cost", label: "Cost", value: verminion.cost },
-  ].filter((stat) => Number.isFinite(stat.value))
+  ].filter((stat) => Number.isFinite(stat.value));
 }
 
 function getVerminionAutoAttack(verminion) {
-  return verminion.area_attack ? "Area" : "Single-target"
+  return verminion.area_attack ? "Area" : "Single-target";
 }
 
 function getVerminionStrengths(verminion) {
@@ -1406,15 +1676,15 @@ function getVerminionStrengths(verminion) {
     { key: "shield", label: "Shield" },
   ]
     .filter((strength) => verminion[strength.key])
-    .map((strength) => strength.label)
+    .map((strength) => strength.label);
 }
 
 function getVerminionSkillTypeName(verminion) {
-  return verminion.skill_type?.name || null
+  return verminion.skill_type?.name || null;
 }
 
 function formatVerminionSkillDescription(description) {
-  return description.replace(/\*\*/g, "").trim()
+  return description.replace(/\*\*/g, "").trim();
 }
 
 function getSourceList(mount) {
@@ -1423,79 +1693,84 @@ function getSourceList(mount) {
       ...source,
       type: source.type || "Unknown",
       text: source.text || "Unknown source",
-    }))
+    }));
   }
 
-  return [{ type: "Unknown", text: "Unknown source" }]
+  return [{ type: "Unknown", text: "Unknown source" }];
 }
 
 function getExpansionIcon(expansion) {
   if (expansion === "ARR") {
-    return "/expansions/ARR.png"
+    return "/expansions/ARR.png";
   }
 
   if (expansion === "HW") {
-    return "/expansions/HW.webp"
+    return "/expansions/HW.webp";
   }
 
   if (expansion === "SB") {
-    return "/expansions/SB.webp"
+    return "/expansions/SB.webp";
   }
 
   if (expansion === "SHB") {
-    return "/expansions/SHB.webp"
+    return "/expansions/SHB.webp";
   }
 
   if (expansion === "EW") {
-    return "/expansions/EW.png"
+    return "/expansions/EW.png";
   }
 
   if (expansion === "DT") {
-    return "/expansions/DT.webp"
+    return "/expansions/DT.webp";
   }
 
-  return "/icons/unknown.png"
+  return "/icons/unknown.png";
 }
 
 function getExpansionName(expansion) {
-  return EXPANSION_NAMES[expansion] || "Unknown Expansion"
+  return EXPANSION_NAMES[expansion] || "Unknown Expansion";
 }
 
 function getSourceLinks(source, mount) {
-  const linkBuilders = getSourceLinkPriority(source)
-  const links = linkBuilders.map((builder) => builder(source, mount)).filter(Boolean)
+  const linkBuilders = getSourceLinkPriority(source);
+  const links = linkBuilders
+    .map((builder) => builder(source, mount))
+    .filter(Boolean);
 
-  return links.filter((link, index) => links.findIndex((entry) => entry.href === link.href) === index)
+  return links.filter(
+    (link, index) =>
+      links.findIndex((entry) => entry.href === link.href) === index,
+  );
 }
 
 function getPrimarySourceLink(sourceLinks) {
-  return sourceLinks[0] || null
+  return sourceLinks[0] || null;
 }
 
 function getVendorSourceLink(source) {
-  const vendorWikiTitle = getVendorWikiTitle(source)
+  const vendorWikiTitle = getVendorWikiTitle(source);
 
   if (!vendorWikiTitle) {
-    return null
+    return null;
   }
 
   return {
     label: "Vendor",
     href: `https://ffxiv.consolegameswiki.com/wiki/${encodeWikiPageTitle(vendorWikiTitle)}`,
-  }
+  };
 }
 
 function getCurrencySourceLink(source) {
-  const garlandCurrencyName = getGarlandCurrencyName(source)
+  const garlandCurrencyName = getGarlandCurrencyName(source);
 
   if (!garlandCurrencyName) {
-    return null
+    return null;
   }
 
   return {
     label: "Garland DB",
     href: `https://www.garlandtools.org/db/#search/${encodeURIComponent(garlandCurrencyName)}`,
-  }
+  };
 }
 
 function getCollectSourceLink(source) {
@@ -1504,460 +1779,497 @@ function getCollectSourceLink(source) {
       label: "Achievement",
       href: `#/achievements/${source.related_id}`,
       external: false,
-    }
+    };
   }
 
-  return null
+  return null;
 }
 
 function getMogstationSourceLink(source) {
   if (!isMogstationSource(source)) {
-    return null
+    return null;
   }
 
   return {
     label: "Mog Station",
     href: "https://store.finalfantasyxiv.com/ffxivstore/en-us/category/11",
-  }
+  };
 }
 
 function getGarlandSourceLink(source) {
-  const garlandType = GARLAND_TYPE_MAP[source.related_type]
+  const garlandType = GARLAND_TYPE_MAP[source.related_type];
 
   if (!garlandType || !source.related_id) {
-    return null
+    return null;
   }
 
   return {
     label: "Garland DB",
     href: `https://www.garlandtools.org/db/#${garlandType}/${source.related_id}`,
-  }
+  };
 }
 
 function getWikiSourceLink(source) {
-  const wikiTitle = getWikiTitle(source)
+  const wikiTitle = getWikiTitle(source);
 
   if (!wikiTitle) {
-    return null
+    return null;
   }
 
   return {
     label: "FFXIV Wiki",
     href: `https://ffxiv.consolegameswiki.com/wiki/${encodeWikiPageTitle(wikiTitle)}`,
-  }
+  };
 }
 
 function getMinionWikiSourceLink(source, mount) {
   if (!isCraftingOrGatheringSource(source) || !mount?.name) {
-    return null
+    return null;
   }
 
   return {
     label: "FFXIV Wiki",
     href: `https://ffxiv.consolegameswiki.com/wiki/${encodeWikiPageTitle(mount.name)}`,
-  }
+  };
 }
 
 function getSourceLinkPriority(source) {
   if (isMogstationSource(source)) {
-    return [getMogstationSourceLink]
+    return [getMogstationSourceLink];
   }
 
   if (isCosmicFortuneSource(source) || isMechPilotRewardSource(source)) {
-    return [getWikiSourceLink, getVendorSourceLink]
+    return [getWikiSourceLink, getVendorSourceLink];
   }
 
   if (isMgpSource(source) || isGilSource(source)) {
-    return [getVendorSourceLink]
+    return [getVendorSourceLink];
   }
 
   if (getGarlandCurrencyName(source)) {
-    return [getCurrencySourceLink, getVendorSourceLink]
+    return [getCurrencySourceLink, getVendorSourceLink];
   }
 
   if (isCraftingOrGatheringSource(source)) {
-    return [getMinionWikiSourceLink, getGarlandSourceLink]
+    return [getMinionWikiSourceLink, getGarlandSourceLink];
   }
 
   if (INSTANCE_TYPES.has(source.type)) {
-    return [getWikiSourceLink]
+    return [getWikiSourceLink];
   }
 
-  return [getCollectSourceLink, getGarlandSourceLink, getWikiSourceLink]
+  return [getCollectSourceLink, getGarlandSourceLink, getWikiSourceLink];
 }
 
 function getWikiTitle(source) {
-  const sourceText = source.text?.trim()
+  const sourceText = source.text?.trim();
 
   if (!sourceText || sourceText === "Unknown source") {
-    return null
+    return null;
   }
 
-  const normalizedWikiTitle = getNormalizedWikiTitle(sourceText)
+  const normalizedWikiTitle = getNormalizedWikiTitle(sourceText);
 
   if (normalizedWikiTitle) {
-    return normalizedWikiTitle
+    return normalizedWikiTitle;
   }
 
-  return sourceText
+  return sourceText;
 }
 
 function encodeWikiPageTitle(title) {
-  return encodeURIComponent(title.replace(/\s+/g, "_"))
+  return encodeURIComponent(title.replace(/\s+/g, "_"));
 }
 
 function getNormalizedWikiTitle(sourceText) {
-  const directTitle = getDirectWikiTitle(sourceText)
+  const directTitle = getDirectWikiTitle(sourceText);
 
   if (directTitle) {
-    return directTitle
+    return directTitle;
   }
 
-  const pvpSeriesTitle = getPvpSeriesWikiTitle(sourceText)
+  const pvpSeriesTitle = getPvpSeriesWikiTitle(sourceText);
 
   if (pvpSeriesTitle) {
-    return pvpSeriesTitle
+    return pvpSeriesTitle;
   }
 
-  const feastTitle = getFeastWikiTitle(sourceText)
+  const feastTitle = getFeastWikiTitle(sourceText);
 
   if (feastTitle) {
-    return feastTitle
+    return feastTitle;
   }
 
-  const cosmicExplorationTitle = getCosmicExplorationWikiTitle(sourceText)
+  const cosmicExplorationTitle = getCosmicExplorationWikiTitle(sourceText);
 
   if (cosmicExplorationTitle) {
-    return cosmicExplorationTitle
+    return cosmicExplorationTitle;
   }
 
-  const instanceContainerTitle = getInstanceContainerWikiTitle(sourceText)
+  const instanceContainerTitle = getInstanceContainerWikiTitle(sourceText);
 
   if (instanceContainerTitle) {
-    return instanceContainerTitle
+    return instanceContainerTitle;
   }
 
-  const lockboxZoneTitle = getLockboxZoneWikiTitle(sourceText)
+  const lockboxZoneTitle = getLockboxZoneWikiTitle(sourceText);
 
   if (lockboxZoneTitle) {
-    return lockboxZoneTitle
+    return lockboxZoneTitle;
   }
 
-  return null
+  return null;
 }
 
 function getVendorWikiTitle(source) {
-  const sourceText = source.text?.trim()
+  const sourceText = source.text?.trim();
 
   if (!sourceText) {
-    return null
+    return null;
   }
 
   if (isMgpSource(source)) {
-    return "Gold Saucer Attendant"
+    return "Gold Saucer Attendant";
   }
 
   if (isPvpTrophyCrystalSource(source)) {
-    return "Crystal Quartermaster"
+    return "Crystal Quartermaster";
   }
 
   if (isPvpWolfMarkSource(source)) {
-    return "Mark Quartermaster"
+    return "Mark Quartermaster";
   }
 
   if (isCosmicFortuneSource(source)) {
-    return "Orbitingway"
+    return "Orbitingway";
   }
 
   if (isMechPilotRewardSource(source)) {
-    return "Alerot"
+    return "Alerot";
   }
 
-  const vendorSourceMatch = sourceText.match(/^(.*?) - \d[\d,]*\s+.+$/)
+  const vendorSourceMatch = sourceText.match(/^(.*?) - \d[\d,]*\s+.+$/);
 
   if (vendorSourceMatch) {
-    return getVendorNameFromSourcePrefix(vendorSourceMatch[1])
+    return getVendorNameFromSourcePrefix(vendorSourceMatch[1]);
   }
 
-  return null
+  return null;
 }
 
 function getVendorNameFromSourcePrefix(sourcePrefix) {
-  const normalizedSourcePrefix = sourcePrefix.trim()
+  const normalizedSourcePrefix = sourcePrefix.trim();
 
   if (!normalizedSourcePrefix) {
-    return null
+    return null;
   }
 
   const vendorSegment = normalizedSourcePrefix.includes(" / ")
     ? normalizedSourcePrefix.split(" / ")[0]
-    : normalizedSourcePrefix.split(" - ")[0]
+    : normalizedSourcePrefix.split(" - ")[0];
 
-  return vendorSegment.replace(/\s*\([^)]*\)\s*$/, "").trim() || null
+  return vendorSegment.replace(/\s*\([^)]*\)\s*$/, "").trim() || null;
 }
 
 function getDirectWikiTitle(sourceText) {
-  return WIKI_TITLE_OVERRIDES[sourceText] || null
+  return WIKI_TITLE_OVERRIDES[sourceText] || null;
 }
 
 function getPvpSeriesWikiTitle(sourceText) {
   if (!/^PvP Series \d+ - Level \d+$/.test(sourceText)) {
-    return null
+    return null;
   }
 
-  return "Series Malmstones"
+  return "Series Malmstones";
 }
 
 function getFeastWikiTitle(sourceText) {
   if (!/^The Feast: Season \d+$/.test(sourceText)) {
-    return null
+    return null;
   }
 
-  return "The Feast"
+  return "The Feast";
 }
 
 function getCosmicExplorationWikiTitle(sourceText) {
-  const cosmicFortuneMatch = sourceText.match(/^Cosmic Fortune - (.+)$/)
+  const cosmicFortuneMatch = sourceText.match(/^Cosmic Fortune - (.+)$/);
 
   if (cosmicFortuneMatch) {
-    return "Cosmic Fortune"
+    return "Cosmic Fortune";
   }
 
-  const mechPilotRewardMatch = sourceText.match(/^Mech Pilot Reward - (.+)$/)
+  const mechPilotRewardMatch = sourceText.match(/^Mech Pilot Reward - (.+)$/);
 
   if (mechPilotRewardMatch) {
-    return normalizeCosmicExplorationZoneTitle(mechPilotRewardMatch[1])
+    return normalizeCosmicExplorationZoneTitle(mechPilotRewardMatch[1]);
   }
 
-  return null
+  return null;
 }
 
 function normalizeCosmicExplorationZoneTitle(zoneTitle) {
-  return WIKI_TITLE_OVERRIDES[zoneTitle] || zoneTitle
+  return WIKI_TITLE_OVERRIDES[zoneTitle] || zoneTitle;
 }
 
 function getInstanceContainerWikiTitle(sourceText) {
-  const containerSourceMatch = sourceText.match(/^(.+?) - (Final Boss Chest(?:es)?|Bronze(?:\/Silver)? Coffer|Silver Coffer|Gold Sack|Silver Sack|Platinum Sack|Sack of First Light)$/)
+  const containerSourceMatch = sourceText.match(
+    /^(.+?) - (Final Boss Chest(?:es)?|Bronze(?:\/Silver)? Coffer|Silver Coffer|Gold Sack|Silver Sack|Platinum Sack|Sack of First Light)$/,
+  );
 
   if (!containerSourceMatch) {
-    return null
+    return null;
   }
 
-  return WIKI_TITLE_OVERRIDES[containerSourceMatch[1]] || containerSourceMatch[1]
+  return (
+    WIKI_TITLE_OVERRIDES[containerSourceMatch[1]] || containerSourceMatch[1]
+  );
 }
 
 function getLockboxZoneWikiTitle(sourceText) {
-  const happyBunnyLockboxMatch = sourceText.match(/^Happy Bunny Lockbox - (.+)$/)
+  const happyBunnyLockboxMatch = sourceText.match(
+    /^Happy Bunny Lockbox - (.+)$/,
+  );
 
   if (!happyBunnyLockboxMatch) {
-    return null
+    return null;
   }
 
-  return happyBunnyLockboxMatch[1]
+  return happyBunnyLockboxMatch[1];
 }
 
 function isMogstationSource(source) {
-  return source.type === "Premium" && source.text?.trim() === MOGSTATION_SOURCE_TEXT
+  return (
+    source.type === "Premium" && source.text?.trim() === MOGSTATION_SOURCE_TEXT
+  );
 }
 
 function isMgpSource(source) {
-  return source.type === "Gold Saucer" && source.text?.includes("MGP")
+  return source.type === "Gold Saucer" && source.text?.includes("MGP");
 }
 
 function isGilSource(source) {
-  return source.text?.includes("Gil")
+  return source.text?.includes("Gil");
 }
 
 function isCosmicFortuneSource(source) {
-  return source.type === "Cosmic Exploration" && source.text?.startsWith("Cosmic Fortune - ")
+  return (
+    source.type === "Cosmic Exploration" &&
+    source.text?.startsWith("Cosmic Fortune - ")
+  );
 }
 
 function isMechPilotRewardSource(source) {
-  return source.type === "Cosmic Exploration" && source.text?.startsWith("Mech Pilot Reward - ")
+  return (
+    source.type === "Cosmic Exploration" &&
+    source.text?.startsWith("Mech Pilot Reward - ")
+  );
 }
 
 function isPvpTrophyCrystalSource(source) {
-  return source.type === "PvP" && source.text?.includes("Trophy Crystals")
+  return source.type === "PvP" && source.text?.includes("Trophy Crystals");
 }
 
 function isPvpWolfMarkSource(source) {
-  return source.type === "PvP" && source.text?.includes("Wolf Marks")
+  return source.type === "PvP" && source.text?.includes("Wolf Marks");
 }
 
 function isCraftingOrGatheringSource(source) {
-  return source.type === "Crafting" || source.type === "Gathering"
+  return source.type === "Crafting" || source.type === "Gathering";
 }
 
 function getGarlandCurrencyName(source) {
-  const sourceText = source.text?.trim()
+  const sourceText = source.text?.trim();
 
   if (!sourceText || sourceText === "Unknown source") {
-    return null
+    return null;
   }
 
-  const directAmountMatch = sourceText.match(/^\d[\d,]*\s+(.+?)(?:\s*\(|$)/)
+  const directAmountMatch = sourceText.match(/^\d[\d,]*\s+(.+?)(?:\s*\(|$)/);
 
   if (directAmountMatch) {
-    return normalizeGarlandCurrencyName(directAmountMatch[1])
+    return normalizeGarlandCurrencyName(directAmountMatch[1]);
   }
 
-  const vendorAmountMatch = sourceText.match(/ - \d[\d,]*\s+(.+?)(?:\s*\(|$)/)
+  const vendorAmountMatch = sourceText.match(/ - \d[\d,]*\s+(.+?)(?:\s*\(|$)/);
 
   if (vendorAmountMatch) {
-    return normalizeGarlandCurrencyName(vendorAmountMatch[1])
+    return normalizeGarlandCurrencyName(vendorAmountMatch[1]);
   }
 
-  return null
+  return null;
 }
 
 function normalizeGarlandCurrencyName(currencyName) {
-  const trimmedCurrencyName = currencyName.trim()
-  const normalizedCurrencyName = normalizeGarlandCurrencyLookupKey(trimmedCurrencyName)
+  const trimmedCurrencyName = currencyName.trim();
+  const normalizedCurrencyName =
+    normalizeGarlandCurrencyLookupKey(trimmedCurrencyName);
 
   if (!trimmedCurrencyName) {
-    return null
+    return null;
   }
 
   if (GARLAND_CURRENCY_NAME_OVERRIDES[normalizedCurrencyName]) {
-    return GARLAND_CURRENCY_NAME_OVERRIDES[normalizedCurrencyName]
+    return GARLAND_CURRENCY_NAME_OVERRIDES[normalizedCurrencyName];
   }
 
-  return singularizeGarlandCurrencyName(trimmedCurrencyName)
+  return singularizeGarlandCurrencyName(trimmedCurrencyName);
 }
 
 function normalizeGarlandCurrencyLookupKey(currencyName) {
-  return currencyName.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  return currencyName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 function singularizeGarlandCurrencyName(currencyName) {
-  const words = currencyName.split(" ")
+  const words = currencyName.split(" ");
 
   for (let index = words.length - 1; index >= 0; index -= 1) {
-    const word = words[index]
-    const singularWord = singularizeGarlandWord(word)
+    const word = words[index];
+    const singularWord = singularizeGarlandWord(word);
 
     if (singularWord !== word) {
-      words[index] = singularWord
-      return words.join(" ")
+      words[index] = singularWord;
+      return words.join(" ");
     }
   }
 
-  return currencyName
+  return currencyName;
 }
 
 function singularizeGarlandWord(word) {
   if (word === "Leaves") {
-    return "Leaf"
+    return "Leaf";
   }
 
   if (word.endsWith("ies")) {
-    return `${word.slice(0, -3)}y`
+    return `${word.slice(0, -3)}y`;
   }
 
   if (word.endsWith("s") && !word.endsWith("ss")) {
-    return word.slice(0, -1)
+    return word.slice(0, -1);
   }
 
-  return word
+  return word;
 }
 
 function getStoredCharacterSyncState(storageKey) {
   if (typeof window === "undefined") {
-    return EMPTY_CHARACTER_SYNC_STATE
+    return EMPTY_CHARACTER_SYNC_STATE;
   }
 
   try {
-    const storedValue = window.localStorage.getItem(storageKey)
+    const storedValue = window.localStorage.getItem(storageKey);
 
     if (!storedValue) {
-      return EMPTY_CHARACTER_SYNC_STATE
+      return EMPTY_CHARACTER_SYNC_STATE;
     }
 
-    const parsedValue = JSON.parse(storedValue)
+    const parsedValue = JSON.parse(storedValue);
 
     return {
       character: parsedValue.character || null,
-      ownedMountIds: Array.isArray(parsedValue.ownedMountIds) ? parsedValue.ownedMountIds : [],
-      ownedMountNames: Array.isArray(parsedValue.ownedMountNames) ? parsedValue.ownedMountNames : [],
-    }
+      ownedMountIds: Array.isArray(parsedValue.ownedMountIds)
+        ? parsedValue.ownedMountIds
+        : [],
+      ownedMountNames: Array.isArray(parsedValue.ownedMountNames)
+        ? parsedValue.ownedMountNames
+        : [],
+    };
   } catch {
-    return EMPTY_CHARACTER_SYNC_STATE
+    return EMPTY_CHARACTER_SYNC_STATE;
   }
 }
 
 function getStoredFavoriteMountIds(storageKey) {
   if (typeof window === "undefined") {
-    return []
+    return [];
   }
 
   try {
-    const storedValue = window.localStorage.getItem(storageKey)
+    const storedValue = window.localStorage.getItem(storageKey);
 
     if (!storedValue) {
-      return []
+      return [];
     }
 
-    const parsedValue = JSON.parse(storedValue)
+    const parsedValue = JSON.parse(storedValue);
 
     return Array.isArray(parsedValue)
-      ? parsedValue.map((value) => Number(value)).filter((value) => Number.isFinite(value))
-      : []
+      ? parsedValue
+          .map((value) => Number(value))
+          .filter((value) => Number.isFinite(value))
+      : [];
   } catch {
-    return []
+    return [];
   }
 }
 
 function getRegionLabel(regionCode) {
-  return REGIONS.find((region) => region.code === regionCode)?.label || regionCode || "Unknown Region"
+  return (
+    REGIONS.find((region) => region.code === regionCode)?.label ||
+    regionCode ||
+    "Unknown Region"
+  );
 }
 
 function normalizeMountOwnershipName(mountName) {
-  return mountName.trim().toLowerCase()
+  return mountName.trim().toLowerCase();
 }
 
-function isMountOwned(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet) {
+function isMountOwned(
+  mount,
+  syncedCharacter,
+  ownedMountIdSet,
+  ownedMountNameSet,
+) {
   if (!syncedCharacter) {
-    return false
+    return false;
   }
 
-  return ownedMountIdSet.has(mount.id) || ownedMountNameSet.has(normalizeMountOwnershipName(mount.name))
+  return (
+    ownedMountIdSet.has(mount.id) ||
+    ownedMountNameSet.has(normalizeMountOwnershipName(mount.name))
+  );
 }
 
-function getMountCardClassName(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet, cardClassName) {
+function getMountCardClassName(
+  mount,
+  syncedCharacter,
+  ownedMountIdSet,
+  ownedMountNameSet,
+  cardClassName,
+) {
   if (!syncedCharacter) {
-    return cardClassName
+    return cardClassName;
   }
 
-  return isMountOwned(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet)
+  return isMountOwned(
+    mount,
+    syncedCharacter,
+    ownedMountIdSet,
+    ownedMountNameSet,
+  )
     ? `${cardClassName} mount-card-owned`
-    : `${cardClassName} mount-card-missing`
+    : `${cardClassName} mount-card-missing`;
 }
 
 function getExpansion(patch) {
-  const patchNumber = parseFloat(patch)
+  const patchNumber = parseFloat(patch);
 
   if (patchNumber >= 2.0 && patchNumber < 3.0) {
     return "ARR";
-  }
-  else if (patchNumber >= 3.0 && patchNumber < 4.0) {
+  } else if (patchNumber >= 3.0 && patchNumber < 4.0) {
     return "HW";
-  }
-  else if (patchNumber >= 4.0 && patchNumber < 5.0) {
+  } else if (patchNumber >= 4.0 && patchNumber < 5.0) {
     return "SB";
-  }
-  else if (patchNumber >= 5.0 && patchNumber < 6.0) {
+  } else if (patchNumber >= 5.0 && patchNumber < 6.0) {
     return "SHB";
-  }
-  else if (patchNumber >= 6.0 && patchNumber < 7.0) {
+  } else if (patchNumber >= 6.0 && patchNumber < 7.0) {
     return "EW";
-  }
-  else if (patchNumber >= 7.0 && patchNumber < 8.0) {
+  } else if (patchNumber >= 7.0 && patchNumber < 8.0) {
     return "DT";
   }
 
   return "Unknown";
 }
 
-export default CollectionPage
-
-
+export default CollectionPage;
