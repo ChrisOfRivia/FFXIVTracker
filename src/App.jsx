@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import CollectionPage from "./CollectionPage.jsx"
+import { useEffect, useState } from "react";
+import CollectionPage from "./CollectionPage.jsx";
 
-const HOME_ROUTE = "home"
+const HOME_ROUTE = "home";
 
 const COLLECTION_PAGES = {
   mounts: {
@@ -53,56 +53,64 @@ const COLLECTION_PAGES = {
     ownershipLabel: "Earned by:",
     detailHashEnabled: true,
   },
-}
+};
 
 function App() {
-  const [activeRoute, setActiveRoute] = useState(() => getRouteFromHash(window.location.hash))
-  const [showHomeDisclaimer, setShowHomeDisclaimer] = useState(() => getRouteFromHash(window.location.hash) === HOME_ROUTE)
+  const [activeRoute, setActiveRoute] = useState(() =>
+    getRouteFromHash(window.location.hash),
+  );
+  const [showHomeDisclaimer, setShowHomeDisclaimer] = useState(
+    () => getRouteFromHash(window.location.hash) === HOME_ROUTE,
+  );
 
   useEffect(() => {
     function handleHashChange() {
-      const nextRoute = getRouteFromHash(window.location.hash)
-      setActiveRoute(nextRoute)
+      const nextRoute = getRouteFromHash(window.location.hash);
+      setActiveRoute(nextRoute);
 
       if (nextRoute !== HOME_ROUTE) {
-        setShowHomeDisclaimer(false)
+        setShowHomeDisclaimer(false);
       }
     }
 
-    window.addEventListener("hashchange", handleHashChange)
+    window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      window.removeEventListener("hashchange", handleHashChange)
-    }
-  }, [])
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
 
   useEffect(() => {
     document.title =
       activeRoute === HOME_ROUTE
         ? "FFXIVTracker"
-        : `${COLLECTION_PAGES[activeRoute]?.title || "FFXIVTracker"} | FFXIVTracker`
-  }, [activeRoute])
+        : `${COLLECTION_PAGES[activeRoute]?.title || "FFXIVTracker"} | FFXIVTracker`;
+  }, [activeRoute]);
 
   useEffect(() => {
     if (activeRoute === HOME_ROUTE && showHomeDisclaimer) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""
+      document.body.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = ""
-    }
-  }, [activeRoute, showHomeDisclaimer])
+      document.body.style.overflow = "";
+    };
+  }, [activeRoute, showHomeDisclaimer]);
 
-  const activeConfig = COLLECTION_PAGES[activeRoute] || null
+  const activeConfig = COLLECTION_PAGES[activeRoute] || null;
 
   return (
     <div className={`app-route-shell app-route-shell-${activeRoute}`}>
       {activeRoute !== HOME_ROUTE ? (
         <nav className="collection-nav" aria-label="Primary navigation">
           <a
-            className={activeRoute === HOME_ROUTE ? "collection-nav-link active" : "collection-nav-link"}
+            className={
+              activeRoute === HOME_ROUTE
+                ? "collection-nav-link active"
+                : "collection-nav-link"
+            }
             href="#/"
           >
             Home
@@ -110,7 +118,11 @@ function App() {
           {Object.values(COLLECTION_PAGES).map((page) => (
             <a
               key={page.key}
-              className={page.key === activeRoute ? "collection-nav-link active" : "collection-nav-link"}
+              className={
+                page.key === activeRoute
+                  ? "collection-nav-link active"
+                  : "collection-nav-link"
+              }
               href={`#/${page.key}`}
               aria-current={page.key === activeRoute ? "page" : undefined}
             >
@@ -129,19 +141,25 @@ function App() {
         <CollectionPage key={activeConfig.key} config={activeConfig} />
       )}
     </div>
-  )
+  );
 }
 
 function HomePage({ showDisclaimer, onDismissDisclaimer }) {
   return (
     <main className="page-shell page-shell-home home-page">
       {showDisclaimer ? (
-        <div className="project-notice-overlay" role="dialog" aria-modal="true" aria-labelledby="project-notice-title">
+        <div
+          className="project-notice-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-notice-title"
+        >
           <div className="project-notice-card">
             <p className="project-notice-eyebrow">Heads Up</p>
             <h2 id="project-notice-title">This app is still in development.</h2>
             <p className="project-notice-text">
-              Some features may be unfinished or buggy while the tracker is still being built out.
+              Some features may be unfinished or buggy while the tracker is
+              still being built out.
             </p>
             <button
               className="project-notice-button"
@@ -171,59 +189,74 @@ function HomePage({ showDisclaimer, onDismissDisclaimer }) {
             <span className="home-route-card-cta">Open mounts</span>
           </a>
 
-          <a className="home-route-card home-route-card-minions" href="#/minions">
+          <a
+            className="home-route-card home-route-card-minions"
+            href="#/minions"
+          >
             <span className="home-route-card-label">Minions</span>
             <div className="home-route-card-icon" aria-hidden="true">
               <img src="/icons/minion.png" alt="" />
             </div>
             <h2>Minion Tracker</h2>
-            <p>Browse minions by source, expansion and check Verminion details in a dedicated view.</p>
+            <p>
+              Browse minions by source, expansion and check Verminion details in
+              a dedicated view.
+            </p>
             <span className="home-route-card-cta">Open minions</span>
           </a>
 
-          <a className="home-route-card home-route-card-achievements" href="#/achievements">
+          <a
+            className="home-route-card home-route-card-achievements"
+            href="#/achievements"
+          >
             <span className="home-route-card-label">Achievements</span>
             <div className="home-route-card-icon" aria-hidden="true">
-              <img src="/icons/achievement.png" alt="" />
+              <img src="/icons/xp.png" alt="" />
             </div>
             <h2>Achievement Tracker</h2>
-            <p>Browse achievements by category, expansion, points, and synced completion status.</p>
+            <p>
+              Browse achievements by category, expansion, points and synced
+              completion status.
+            </p>
             <span className="home-route-card-cta">Open achievements</span>
           </a>
         </div>
       </section>
     </main>
-  )
+  );
 }
 
 function getCollectionNavLabel(pageKey) {
   if (pageKey === "mounts") {
-    return "Mounts"
+    return "Mounts";
   }
 
   if (pageKey === "minions") {
-    return "Minions"
+    return "Minions";
   }
 
-  return "Achievements"
+  return "Achievements";
 }
 
 function getRouteFromHash(hashValue) {
-  const normalizedHash = hashValue.replace(/^#\/?/, "").trim().toLowerCase()
+  const normalizedHash = hashValue.replace(/^#\/?/, "").trim().toLowerCase();
 
   if (normalizedHash === "mounts") {
-    return "mounts"
+    return "mounts";
   }
 
   if (normalizedHash === "minions") {
-    return "minions"
+    return "minions";
   }
 
-  if (normalizedHash === "achievements" || normalizedHash.startsWith("achievements/")) {
-    return "achievements"
+  if (
+    normalizedHash === "achievements" ||
+    normalizedHash.startsWith("achievements/")
+  ) {
+    return "achievements";
   }
 
-  return HOME_ROUTE
+  return HOME_ROUTE;
 }
 
-export default App
+export default App;
