@@ -38,6 +38,21 @@ const COLLECTION_PAGES = {
     },
     typeGroupVariant: "minions",
   },
+  achievements: {
+    key: "achievements",
+    title: "FFXIV Achievement Tracker",
+    singularLabel: "achievement",
+    pluralLabel: "achievements",
+    dataEndpoint: "https://ffxivcollect.com/api/achievements",
+    syncEndpoint: "/api/character-achievements",
+    characterStorageKey: "ffxiv-achievement-tracker-character-sync",
+    favoritesStorageKey: "ffxiv-achievement-tracker-favorites",
+    pageClassName: "page-shell-achievements",
+    cardClassName: "mount-card achievement-card",
+    typeGroupVariant: "achievements",
+    ownershipLabel: "Earned by:",
+    detailHashEnabled: true,
+  },
 }
 
 function App() {
@@ -99,7 +114,7 @@ function App() {
               href={`#/${page.key}`}
               aria-current={page.key === activeRoute ? "page" : undefined}
             >
-              {page.key === "mounts" ? "Mounts" : "Minions"}
+              {getCollectionNavLabel(page.key)}
             </a>
           ))}
         </nav>
@@ -165,10 +180,32 @@ function HomePage({ showDisclaimer, onDismissDisclaimer }) {
             <p>Browse minions by source, expansion and check Verminion details in a dedicated view.</p>
             <span className="home-route-card-cta">Open minions</span>
           </a>
+
+          <a className="home-route-card home-route-card-achievements" href="#/achievements">
+            <span className="home-route-card-label">Achievements</span>
+            <div className="home-route-card-icon" aria-hidden="true">
+              <img src="/icons/achievement.png" alt="" />
+            </div>
+            <h2>Achievement Tracker</h2>
+            <p>Browse achievements by category, expansion, points, and synced completion status.</p>
+            <span className="home-route-card-cta">Open achievements</span>
+          </a>
         </div>
       </section>
     </main>
   )
+}
+
+function getCollectionNavLabel(pageKey) {
+  if (pageKey === "mounts") {
+    return "Mounts"
+  }
+
+  if (pageKey === "minions") {
+    return "Minions"
+  }
+
+  return "Achievements"
 }
 
 function getRouteFromHash(hashValue) {
@@ -180,6 +217,10 @@ function getRouteFromHash(hashValue) {
 
   if (normalizedHash === "minions") {
     return "minions"
+  }
+
+  if (normalizedHash === "achievements" || normalizedHash.startsWith("achievements/")) {
+    return "achievements"
   }
 
   return HOME_ROUTE

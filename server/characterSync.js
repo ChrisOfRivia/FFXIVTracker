@@ -56,14 +56,24 @@ export async function getOwnedMinions(characterId) {
   return getOwnedCollectableEntries(characterId, "minions")
 }
 
+export async function getOwnedAchievements(characterId) {
+  return getOwnedCollectableEntries(characterId, "achievements")
+}
+
 async function getOwnedCollectableEntries(characterId, collectionPath) {
   await refreshCharacter(characterId).catch(() => null)
 
-  const response = await fetch(`${FFXIV_COLLECT_BASE_URL}/api/characters/${characterId}/${collectionPath}/owned`, {
+  const url = new URL(`/api/characters/${characterId}/${collectionPath}/owned`, FFXIV_COLLECT_BASE_URL)
+  url.searchParams.set("_", Date.now().toString())
+
+  const response = await fetch(url, {
     headers: {
       Accept: "application/json",
+      "Cache-Control": "no-cache",
+      Pragma: "no-cache",
       "User-Agent": USER_AGENT,
     },
+    cache: "no-store",
   })
 
   if (!response.ok) {
@@ -136,20 +146,49 @@ async function refreshCharacter(characterId) {
     return
   }
 
-  const cookie = pageResponse.headers.get("set-cookie")
+  const cookie = getCookieHeader(pageResponse.headers)
   const body = new URLSearchParams({ authenticity_token: csrfToken })
 
-  await fetch(`${FFXIV_COLLECT_BASE_URL}/character/refresh/${characterId}`, {
+  const refreshResponse = await fetch(`${FFXIV_COLLECT_BASE_URL}/character/refresh/${characterId}`, {
     method: "POST",
     headers: {
       Accept: "text/html,application/xhtml+xml",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRF-Token": csrfToken,
       "User-Agent": USER_AGENT,
       Referer: characterUrl,
       ...(cookie ? { Cookie: cookie } : {}),
     },
     body: body.toString(),
   })
+
+  if (!refreshResponse.ok) {
+    const error = new Error(`FFXIV Collect refresh responded with ${refreshResponse.status}`)
+    error.status = refreshResponse.status
+    throw error
+  }
+}
+
+function getCookieHeader(headers) {
+  if (typeof headers.getSetCookie === "function") {
+    return headers
+      .getSetCookie()
+      .map((cookie) => cookie.split(";")[0])
+      .filter(Boolean)
+      .join("; ")
+  }
+
+  const setCookieHeader = headers.get("set-cookie")
+
+  if (!setCookieHeader) {
+    return ""
+  }
+
+  return setCookieHeader
+    .split(/,(?=\s*[^;,=\s]+=[^;,]+)/)
+    .map((cookie) => cookie.split(";")[0].trim())
+    .filter(Boolean)
+    .join("; ")
 }
 
 function parseCharacterSearchResults(html, source) {

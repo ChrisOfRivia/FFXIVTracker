@@ -11,8 +11,15 @@ const SOURCE_ICONS = {
   Unknown: "/icons/unknown.png",
   Trial: "/icons/trial.png",
   Achievement: "/icons/achievement.png",
+  Battle: "/icons/trial.png",
+  Character: "/icons/special.png",
   Event: "/icons/seasonal.png",
+  Exploration: "/icons/crescent.png",
+  "Grand Company": "/icons/special.png",
+  Items: "/icons/treasure.png",
+  Legacy: "/icons/achievement.png",
   Quest: "/icons/msq.png",
+  Quests: "/icons/msq.png",
   "Wondrous Tails": "/icons/trails.png",
   Premium: "/icons/store.png",
   "V&C Dungeon": "/icons/trissant.png",
@@ -37,6 +44,7 @@ const SOURCE_ICONS = {
   Dungeon: "/icons/dungeon.png",
   Venture: "/icons/retainer.png",
   Voyages: "/icons/voyages.png",
+  "Crafting & Gathering": "/icons/crafting.png",
   Other: "/icons/special.png",
 }
 
@@ -83,6 +91,21 @@ const MINION_TYPE_GROUPS = [
   {
     label: "Special",
     types: ["Event", "Premium", "Purchase", "Other"],
+  },
+]
+
+const ACHIEVEMENT_TYPE_GROUPS = [
+  {
+    label: "Disciplines",
+    types: ["Battle", "PvP", "Character", "Items"],
+  },
+  {
+    label: "Adventuring",
+    types: ["Crafting & Gathering", "Quests", "Exploration", "Grand Company"],
+  },
+  {
+    label: "Archive",
+    types: ["Legacy"],
   },
 ]
 
@@ -189,7 +212,7 @@ const EMPTY_CHARACTER_SYNC_STATE = {
 }
 
 function CollectionPage({ config }) {
-  const typeGroups = config.typeGroupVariant === "minions" ? MINION_TYPE_GROUPS : MOUNT_TYPE_GROUPS
+  const typeGroups = getTypeGroups(config.typeGroupVariant)
   const [mounts, setMounts] = useState([])
   const [selectedTypes, setSelectedTypes] = useState([])
   const [selectedExpansions, setSelectedExpansions] = useState([])
@@ -212,9 +235,33 @@ function CollectionPage({ config }) {
     fetch(config.dataEndpoint)
       .then((response) => response.json())
       .then((data) => {
-        setMounts(data.results)
+        setMounts(Array.isArray(data.results) ? data.results : [])
       })
   }, [config.dataEndpoint])
+
+  useEffect(() => {
+    if (!config.detailHashEnabled || mounts.length === 0) {
+      return undefined
+    }
+
+    function syncSelectedCollectableFromHash() {
+      const detailId = getDetailIdFromHash(window.location.hash, config.key)
+
+      if (!detailId) {
+        setSelectedMount(null)
+        return
+      }
+
+      setSelectedMount(mounts.find((mount) => mount.id === detailId) || null)
+    }
+
+    syncSelectedCollectableFromHash()
+    window.addEventListener("hashchange", syncSelectedCollectableFromHash)
+
+    return () => {
+      window.removeEventListener("hashchange", syncSelectedCollectableFromHash)
+    }
+  }, [config.detailHashEnabled, config.key, mounts])
 
   useEffect(() => {
     document.body.style.overflow = selectedMount || showCharacterSync ? "hidden" : ""
@@ -228,6 +275,9 @@ function CollectionPage({ config }) {
     function handleKeyDown(event) {
       if (event.key === "Escape") {
         setSelectedMount(null)
+        if (config.detailHashEnabled && getDetailIdFromHash(window.location.hash, config.key)) {
+          setRouteHash(`/${config.key}`)
+        }
         setShowCharacterSync(false)
       }
     }
@@ -237,7 +287,7 @@ function CollectionPage({ config }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [])
+  }, [config.detailHashEnabled, config.key])
 
   useEffect(() => {
     function handleScroll() {
@@ -279,13 +329,14 @@ function CollectionPage({ config }) {
   const trimmedSearchQuery = searchQuery.trim()
 
   const filteredMounts = mounts.filter((mount) => {
-    const mountType = getPrimarySource(mount).type
+    const mountType = getCollectableType(mount, config)
     const expansion = getExpansion(mount.patch)
     const normalizedQuery = trimmedSearchQuery.toLowerCase()
     const matchesSearch =
       normalizedQuery === "" ||
       mount.name.toLowerCase().includes(normalizedQuery) ||
-      getPrimarySource(mount).text.toLowerCase().includes(normalizedQuery)
+      getCollectableSourceText(mount, config).toLowerCase().includes(normalizedQuery) ||
+      (mount.description || "").toLowerCase().includes(normalizedQuery)
 
     const matchesType = selectedTypes.length === 0 || selectedTypes.includes(mountType)
     const matchesExpansion = selectedExpansions.length === 0 || selectedExpansions.includes(expansion)
@@ -318,6 +369,18 @@ function CollectionPage({ config }) {
 
   function openMountDetails(mount) {
     setSelectedMount(mount)
+
+    if (config.detailHashEnabled) {
+      setRouteHash(`/${config.key}/${mount.id}`)
+    }
+  }
+
+  function closeMountDetails() {
+    setSelectedMount(null)
+
+    if (config.detailHashEnabled && getDetailIdFromHash(window.location.hash, config.key)) {
+      setRouteHash(`/${config.key}`)
+    }
   }
 
   function toggleFavoriteMount(mountId) {
@@ -439,7 +502,7 @@ function CollectionPage({ config }) {
       const mountUrl = new URL(config.syncEndpoint, window.location.origin)
       mountUrl.searchParams.set("id", character.id)
 
-      const response = await fetch(mountUrl)
+      const response = await fetch(mountUrl, { cache: "no-store" })
       const payload = await response.json()
 
       if (!response.ok) {
@@ -454,6 +517,10 @@ function CollectionPage({ config }) {
       setCharacterStatus({
         tone: "success",
         message: `${character.name} synced successfully.`,
+      })
+      setCharacterPanelStatus({
+        tone: "success",
+        message: `${character.name} refreshed: ${(payload.ownedMountIds || []).length}/${totalMountCount} ${config.pluralLabel} owned.`,
       })
 
       if (closeModal) {
@@ -493,12 +560,11 @@ function CollectionPage({ config }) {
   }
 
   const selectedMountExpansion = selectedMount ? getExpansion(selectedMount.patch) : null
-  const selectedMountSourceType = selectedMount ? getPrimarySource(selectedMount).type : "Unknown"
+  const selectedMountSourceType = selectedMount ? getCollectableType(selectedMount, config) : "Unknown"
   const selectedMountIsFavorite = selectedMount ? favoriteMountIdSet.has(selectedMount.id) : false
   const selectedMountVerminion = selectedMount?.verminion || null
   const selectedMountRaceName = selectedMount?.race?.name || null
-  const detailCardClassName =
-    config.typeGroupVariant === "minions" ? "mount-detail-card minion-detail-card" : "mount-detail-card"
+  const detailCardClassName = getDetailCardClassName(config.typeGroupVariant)
   const availableDataCenters = getDataCentersByRegion(characterForm.region)
   const availableWorlds = getWorldsByDataCenter(characterForm.dataCenter)
   const visibleCharacterResults = characterResults.slice(0, INITIAL_CHARACTER_RESULTS_COUNT)
@@ -511,7 +577,7 @@ function CollectionPage({ config }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="mount-detail-title"
-          onClick={() => setSelectedMount(null)}
+          onClick={closeMountDetails}
         >
           <div className={detailCardClassName} onClick={(event) => event.stopPropagation()}>
             <button
@@ -525,7 +591,7 @@ function CollectionPage({ config }) {
             </button>
             <button
               className="mount-detail-close"
-              onClick={() => setSelectedMount(null)}
+              onClick={closeMountDetails}
               aria-label="Close mount details"
               type="button"
             >
@@ -559,9 +625,7 @@ function CollectionPage({ config }) {
 
                 <div className="mount-detail-title-group">
                   <h2 id="mount-detail-title">{selectedMount.name}</h2>
-                  <p className="mount-detail-subtitle">
-                    Patch {selectedMount.patch || "Unknown"}
-                  </p>
+                  <p className="mount-detail-subtitle">{getDetailSubtitle(selectedMount, config)}</p>
                   {selectedMount.description ? (
                     <p className="mount-detail-description">{selectedMount.description}</p>
                   ) : null}
@@ -572,12 +636,12 @@ function CollectionPage({ config }) {
 
             <div className="mount-detail-body">
               <div className="mount-detail-image">
-                <img src={selectedMount.image} alt={selectedMount.name} />
+                <img src={getCollectableImage(selectedMount)} alt={selectedMount.name} />
               </div>
 
               <div className="mount-detail-info">
                 <div className="mount-detail-owned">
-                  Owned by: <strong>{selectedMount.owned}</strong>
+                  {config.ownershipLabel || "Owned by:"} <strong>{selectedMount.owned}</strong>
                   {syncedCharacter ? (
                     <p className="mount-detail-character-status">
                       {syncedCharacter.name}: <strong>{isMountOwned(selectedMount, syncedCharacter, ownedMountIdSet, ownedMountNameSet) ? "Owned" : "Missing"}</strong>
@@ -668,57 +732,61 @@ function CollectionPage({ config }) {
                   </details>
                 ) : null}
 
-                <div className="mount-detail-section">
-                  <h3>How to Get It</h3>
+                {config.typeGroupVariant === "achievements" ? (
+                  <AchievementDetailSection achievement={selectedMount} />
+                ) : (
+                  <div className="mount-detail-section">
+                    <h3>How to Get It</h3>
 
-                  <div className="mount-detail-sources">
-                    {getSourceList(selectedMount).map((source, index) => {
-                      const sourceLinks = getSourceLinks(source, selectedMount)
-                      const primarySourceLink = getPrimarySourceLink(sourceLinks)
+                    <div className="mount-detail-sources">
+                      {getSourceList(selectedMount).map((source, index) => {
+                        const sourceLinks = getSourceLinks(source, selectedMount)
+                        const primarySourceLink = getPrimarySourceLink(sourceLinks)
 
-                      return (
-                        <div key={`${selectedMount.id}-${source.type}-${index}`} className="mount-detail-source">
-                          <div className="mount-detail-source-header">
-                            <img
-                              src={SOURCE_ICONS[source.type] || "/icons/unknown.png"}
-                              alt={source.type}
-                            />
-                            <span>{source.type}</span>
-                          </div>
-
-                          {primarySourceLink ? (
-                            <a
-                              className="mount-detail-source-copy mount-detail-source-copy-link"
-                              href={primarySourceLink.href}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {source.text}
-                            </a>
-                          ) : (
-                            <p className="mount-detail-source-copy">{source.text}</p>
-                          )}
-
-                          {sourceLinks.length > 0 ? (
-                            <div className="mount-detail-source-links">
-                              {sourceLinks.map((link) => (
-                                <a
-                                  key={`${selectedMount.id}-${source.type}-${link.label}-${link.href}`}
-                                  className="mount-detail-source-pill"
-                                  href={link.href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {link.label}
-                                </a>
-                              ))}
+                        return (
+                          <div key={`${selectedMount.id}-${source.type}-${index}`} className="mount-detail-source">
+                            <div className="mount-detail-source-header">
+                              <img
+                                src={SOURCE_ICONS[source.type] || "/icons/unknown.png"}
+                                alt={source.type}
+                              />
+                              <span>{source.type}</span>
                             </div>
-                          ) : null}
-                        </div>
-                      )
-                    })}
+
+                            {primarySourceLink ? (
+                              <a
+                                className="mount-detail-source-copy mount-detail-source-copy-link"
+                                href={primarySourceLink.href}
+                                target={primarySourceLink.external === false ? undefined : "_blank"}
+                                rel={primarySourceLink.external === false ? undefined : "noreferrer"}
+                              >
+                                {source.text}
+                              </a>
+                            ) : (
+                              <p className="mount-detail-source-copy">{source.text}</p>
+                            )}
+
+                            {sourceLinks.length > 0 ? (
+                              <div className="mount-detail-source-links">
+                                {sourceLinks.map((link) => (
+                                  <a
+                                    key={`${selectedMount.id}-${source.type}-${link.label}-${link.href}`}
+                                    className="mount-detail-source-pill"
+                                    href={link.href}
+                                    target={link.external === false ? undefined : "_blank"}
+                                    rel={link.external === false ? undefined : "noreferrer"}
+                                  >
+                                    {link.label}
+                                  </a>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -1148,10 +1216,10 @@ function CollectionPage({ config }) {
                   </div>
                   <h2>{mount.name}</h2>
                   <div className="mount-image">
-                    <img src={mount.image} />
+                    <img src={getCollectableImage(mount)} alt="" aria-hidden="true" />
                   </div>
                   <div className="mount-owned">
-                    <h4>Owned by: {mount.owned}</h4>
+                    <h4>{config.ownershipLabel || "Owned by:"} {mount.owned}</h4>
                     {syncedCharacter ? (
                       <p className="mount-character-status">
                         {isMountOwned(mount, syncedCharacter, ownedMountIdSet, ownedMountNameSet) ? "Owned" : "Missing"}
@@ -1162,11 +1230,13 @@ function CollectionPage({ config }) {
                   <div className="source-mount">
                     <img
                       src={
-                        SOURCE_ICONS[getPrimarySource(mount).type] ||
+                        SOURCE_ICONS[getCollectableType(mount, config)] ||
                         "/icons/unknown.png"
                       }
+                      alt=""
+                      aria-hidden="true"
                     />
-                    <p className="source-text">{getPrimarySource(mount).text}</p>
+                    <p className="source-text">{getCollectableSourceText(mount, config)}</p>
                   </div>
                 </div>
               ))}
@@ -1190,6 +1260,125 @@ function CollectionPage({ config }) {
       ) : null}
     </>
   )
+}
+
+function AchievementDetailSection({ achievement }) {
+  return (
+    <div className="mount-detail-section achievement-detail-section">
+      <h3>Achievement Details</h3>
+
+      <div className="achievement-detail-stats">
+        <div>
+          <span>Points</span>
+          <strong>{achievement.points ?? 0}</strong>
+        </div>
+        <div>
+          <span>Category</span>
+          <strong>{achievement.category?.name || "Unknown"}</strong>
+        </div>
+        <div>
+          <span>Order</span>
+          <strong>{achievement.order ?? "Unknown"}</strong>
+        </div>
+      </div>
+
+      <div className="mount-detail-sources">
+        <div className="mount-detail-source">
+          <div className="mount-detail-source-header">
+            <img src={SOURCE_ICONS[getAchievementType(achievement)] || "/icons/achievement.png"} alt="" aria-hidden="true" />
+            <span>{getAchievementType(achievement)}</span>
+          </div>
+          <p className="mount-detail-source-copy">{achievement.description || "No achievement description available."}</p>
+          <div className="mount-detail-source-links">
+            <a
+              className="mount-detail-source-pill"
+              href={`#/achievements/${achievement.id}`}
+            >
+              Site Link
+            </a>
+            <a
+              className="mount-detail-source-pill"
+              href={`https://ffxivcollect.com/achievements/${achievement.id}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              FFXIV Collect
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function getTypeGroups(typeGroupVariant) {
+  if (typeGroupVariant === "minions") {
+    return MINION_TYPE_GROUPS
+  }
+
+  if (typeGroupVariant === "achievements") {
+    return ACHIEVEMENT_TYPE_GROUPS
+  }
+
+  return MOUNT_TYPE_GROUPS
+}
+
+function getDetailCardClassName(typeGroupVariant) {
+  if (typeGroupVariant === "minions") {
+    return "mount-detail-card minion-detail-card"
+  }
+
+  if (typeGroupVariant === "achievements") {
+    return "mount-detail-card achievement-detail-card"
+  }
+
+  return "mount-detail-card"
+}
+
+function getDetailIdFromHash(hashValue, collectionKey) {
+  const normalizedHash = hashValue.replace(/^#\/?/, "").trim().toLowerCase()
+  const detailMatch = normalizedHash.match(new RegExp(`^${collectionKey}/(\\d+)$`))
+
+  return detailMatch ? Number(detailMatch[1]) : null
+}
+
+function setRouteHash(pathname) {
+  window.history.pushState(null, "", `#${pathname}`)
+  window.dispatchEvent(new HashChangeEvent("hashchange"))
+}
+
+function getCollectableType(collectable, config) {
+  if (config.typeGroupVariant === "achievements") {
+    return getAchievementType(collectable)
+  }
+
+  return getPrimarySource(collectable).type
+}
+
+function getCollectableSourceText(collectable, config) {
+  if (config.typeGroupVariant === "achievements") {
+    return collectable.category?.name || collectable.description || "Achievement"
+  }
+
+  return getPrimarySource(collectable).text
+}
+
+function getCollectableImage(collectable) {
+  return collectable.image || collectable.icon || "/icons/achievement.png"
+}
+
+function getDetailSubtitle(collectable, config) {
+  const patchText = `Patch ${collectable.patch || "Unknown"}`
+
+  if (config.typeGroupVariant === "achievements") {
+    return `${patchText} - ${collectable.points ?? 0} points`
+  }
+
+  return patchText
+}
+
+function getAchievementType(achievement) {
+  return achievement.type?.name || "Achievement"
 }
 
 function getPrimarySource(mount) {
@@ -1312,8 +1501,9 @@ function getCurrencySourceLink(source) {
 function getCollectSourceLink(source) {
   if (source.related_type === "Achievement" && source.related_id) {
     return {
-      label: "FFXIV Collect",
-      href: `https://ffxivcollect.com/achievements/${source.related_id}`,
+      label: "Achievement",
+      href: `#/achievements/${source.related_id}`,
+      external: false,
     }
   }
 
