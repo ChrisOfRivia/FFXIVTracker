@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DATA_CENTER_REGION,
   REGIONS,
@@ -241,6 +241,10 @@ const GARLAND_CURRENCY_NAME_OVERRIDES = {
 };
 
 const INITIAL_CHARACTER_RESULTS_COUNT = 12;
+const DEFAULT_INITIAL_RENDER_COUNT = 180;
+const DEFAULT_RENDER_BATCH_SIZE = 120;
+const ACHIEVEMENT_INITIAL_RENDER_COUNT = 120;
+const ACHIEVEMENT_RENDER_BATCH_SIZE = 120;
 const DEFAULT_CHARACTER_FORM = {
   region: "",
   dataCenter: "",
@@ -265,6 +269,11 @@ function CollectionPage({ config }) {
   const [selectedMount, setSelectedMount] = useState(null);
   const [showCharacterSync, setShowCharacterSync] = useState(false);
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+  const [renderWindow, setRenderWindow] = useState(() => ({
+    key: "",
+    count: getInitialRenderCount(config.typeGroupVariant),
+  }));
+  const loadMoreRef = useRef(null);
   const [characterForm, setCharacterForm] = useState(DEFAULT_CHARACTER_FORM);
   const [characterResults, setCharacterResults] = useState([]);
   const [characterStatus, setCharacterStatus] = useState({
@@ -384,52 +393,150 @@ function CollectionPage({ config }) {
   }, [favoriteMountIds, config.favoritesStorageKey]);
 
   const syncedCharacter = characterSyncState.character;
-  const ownedMountIdSet = new Set(characterSyncState.ownedMountIds);
-  const ownedMountNameSet = new Set(
-    characterSyncState.ownedMountNames.map(normalizeMountOwnershipName),
+  const ownedMountIdSet = useMemo(
+    () => new Set(characterSyncState.ownedMountIds),
+    [characterSyncState.ownedMountIds],
   );
-  const favoriteMountIdSet = new Set(favoriteMountIds);
+  const ownedMountNameSet = useMemo(
+    () =>
+      new Set(
+        characterSyncState.ownedMountNames.map(normalizeMountOwnershipName),
+      ),
+    [characterSyncState.ownedMountNames],
+  );
+  const favoriteMountIdSet = useMemo(
+    () => new Set(favoriteMountIds),
+    [favoriteMountIds],
+  );
   const ownedMountCount = characterSyncState.ownedMountIds.length;
   const totalMountCount = mounts.length;
   const trimmedSearchQuery = searchQuery.trim();
+  const normalizedSearchQuery = trimmedSearchQuery.toLowerCase();
+  const initialRenderCount = getInitialRenderCount(config.typeGroupVariant);
+  const renderBatchSize = getRenderBatchSize(config.typeGroupVariant);
+  const renderWindowKey = [
+    config.typeGroupVariant,
+    mounts.length,
+    selectedTypes.join("|"),
+    selectedExpansions.join("|"),
+    normalizedSearchQuery,
+    ownedFilter,
+    showFavoritesOnly ? "favorites" : "all",
+    favoriteMountIds.join("|"),
+    characterSyncState.ownedMountIds.join("|"),
+    characterSyncState.ownedMountNames.join("|"),
+  ].join("::");
 
-  const filteredMounts = mounts.filter((mount) => {
-    const mountType = getCollectableType(mount, config);
-    const expansion = getExpansion(mount.patch);
-    const normalizedQuery = trimmedSearchQuery.toLowerCase();
-    const matchesSearch =
-      normalizedQuery === "" ||
-      mount.name.toLowerCase().includes(normalizedQuery) ||
-      getCollectableSourceText(mount, config)
-        .toLowerCase()
-        .includes(normalizedQuery) ||
-      (mount.description || "").toLowerCase().includes(normalizedQuery);
+  const filteredMounts = useMemo(() => {
+    return mounts.filter((mount) => {
+      const mountType = getCollectableType(mount, config);
+      const expansion = getExpansion(mount.patch);
+      const matchesSearch =
+        normalizedSearchQuery === "" ||
+        mount.name.toLowerCase().includes(normalizedSearchQuery) ||
+        getCollectableSourceText(mount, config)
+          .toLowerCase()
+          .includes(normalizedSearchQuery) ||
+        (mount.description || "").toLowerCase().includes(normalizedSearchQuery);
 
-    const matchesType =
-      selectedTypes.length === 0 || selectedTypes.includes(mountType);
-    const matchesExpansion =
-      selectedExpansions.length === 0 || selectedExpansions.includes(expansion);
-    const mountIsOwned = isMountOwned(
-      mount,
-      syncedCharacter,
-      ownedMountIdSet,
-      ownedMountNameSet,
+      const matchesType =
+        selectedTypes.length === 0 || selectedTypes.includes(mountType);
+      const matchesExpansion =
+        selectedExpansions.length === 0 ||
+        selectedExpansions.includes(expansion);
+      const mountIsOwned = isMountOwned(
+        mount,
+        syncedCharacter,
+        ownedMountIdSet,
+        ownedMountNameSet,
+      );
+      const matchesOwned =
+        ownedFilter === "all" ||
+        (ownedFilter === "owned" && mountIsOwned) ||
+        (ownedFilter === "unowned" && !mountIsOwned);
+      const matchesFavorites =
+        !showFavoritesOnly || favoriteMountIdSet.has(mount.id);
+
+      return (
+        matchesType &&
+        matchesExpansion &&
+        matchesSearch &&
+        matchesOwned &&
+        matchesFavorites
+      );
+    });
+  }, [
+    config,
+    favoriteMountIdSet,
+    mounts,
+    normalizedSearchQuery,
+    ownedFilter,
+    ownedMountIdSet,
+    ownedMountNameSet,
+    selectedExpansions,
+    selectedTypes,
+    showFavoritesOnly,
+    syncedCharacter,
+  ]);
+  const visibleMountCount =
+    renderWindow.key === renderWindowKey
+      ? renderWindow.count
+      : initialRenderCount;
+  const hasMoreMounts = visibleMountCount < filteredMounts.length;
+
+  const visibleMounts = filteredMounts.slice(0, visibleMountCount);
+
+  const showMoreMounts = useCallback(() => {
+    setRenderWindow((currentWindow) => {
+      const currentCount =
+        currentWindow.key === renderWindowKey
+          ? currentWindow.count
+          : initialRenderCount;
+
+      return {
+        key: renderWindowKey,
+        count: Math.min(currentCount + renderBatchSize, filteredMounts.length),
+      };
+    });
+  }, [
+    filteredMounts.length,
+    initialRenderCount,
+    renderBatchSize,
+    renderWindowKey,
+  ]);
+
+  useEffect(() => {
+    if (!hasMoreMounts) {
+      return undefined;
+    }
+
+    const loadMoreElement = loadMoreRef.current;
+
+    if (
+      !loadMoreElement ||
+      typeof window === "undefined" ||
+      !("IntersectionObserver" in window)
+    ) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) {
+          return;
+        }
+
+        showMoreMounts();
+      },
+      { rootMargin: "600px 0px" },
     );
-    const matchesOwned =
-      ownedFilter === "all" ||
-      (ownedFilter === "owned" && mountIsOwned) ||
-      (ownedFilter === "unowned" && !mountIsOwned);
-    const matchesFavorites =
-      !showFavoritesOnly || favoriteMountIdSet.has(mount.id);
 
-    return (
-      matchesType &&
-      matchesExpansion &&
-      matchesSearch &&
-      matchesOwned &&
-      matchesFavorites
-    );
-  });
+    observer.observe(loadMoreElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [filteredMounts.length, hasMoreMounts, renderBatchSize, showMoreMounts]);
   const showFavoritesEmptyState =
     showFavoritesOnly && favoriteMountIds.length === 0;
   const showFavoritesFilteredEmptyState =
@@ -1481,8 +1588,9 @@ function CollectionPage({ config }) {
             {!showFavoritesEmptyState &&
             !showFavoritesFilteredEmptyState &&
             !showOwnedEmptyState ? (
-              <div className="mount-grid">
-                {filteredMounts.map((mount) => (
+              <>
+                <div className="mount-grid">
+                  {visibleMounts.map((mount) => (
                   <div
                     key={mount.id}
                     className={getMountCardClassName(
@@ -1554,8 +1662,20 @@ function CollectionPage({ config }) {
                       </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                {hasMoreMounts ? (
+                  <div className="collection-load-more" ref={loadMoreRef}>
+                    <button
+                      className="collection-load-more-button"
+                      type="button"
+                      onClick={showMoreMounts}
+                    >
+                      Load more {config.pluralLabel}
+                    </button>
+                  </div>
+                ) : null}
+              </>
             ) : null}
           </main>
         </div>
@@ -1587,6 +1707,22 @@ function getTypeGroups(typeGroupVariant) {
   }
 
   return MOUNT_TYPE_GROUPS;
+}
+
+function getInitialRenderCount(typeGroupVariant) {
+  if (typeGroupVariant === "achievements") {
+    return ACHIEVEMENT_INITIAL_RENDER_COUNT;
+  }
+
+  return DEFAULT_INITIAL_RENDER_COUNT;
+}
+
+function getRenderBatchSize(typeGroupVariant) {
+  if (typeGroupVariant === "achievements") {
+    return ACHIEVEMENT_RENDER_BATCH_SIZE;
+  }
+
+  return DEFAULT_RENDER_BATCH_SIZE;
 }
 
 function getDetailCardClassName(typeGroupVariant) {
