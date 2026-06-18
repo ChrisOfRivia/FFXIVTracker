@@ -1,25 +1,25 @@
 # FFXIVTracker
 
-FFXIVTracker is a fan-made React + Vite project for browsing, filtering, and tracking mounts and minions from Final Fantasy XIV.
+FFXIVTracker is a fan-made React + Vite project for browsing, filtering, and tracking Final Fantasy XIV collection content.
 
 Live site: [ffxivtracker.vercel.app](https://ffxivtracker.vercel.app/)
 
-It pulls live data from the public [FFXIV Collect](https://ffxivcollect.com/) API and presents it in a browsable tracker-style interface with filtering, source links, favorites, detail modals, and character-based ownership syncing.
+It pulls live data from the public [FFXIV Collect](https://ffxivcollect.com/) API and presents it in a browsable tracker-style interface with themed cards, search and filter tools, favorites, detail modals, and character-based ownership syncing.
 
 ## What It Does
 
-- Fetches live mount and minion data from FFXIV Collect
+- Fetches live mounts, minions, accessories, and achievements from FFXIV Collect
 - Displays artwork, source details, patch/expansion info, and ownership counts
-- Filters mounts by source type and expansion
-- Browses minions with source filters, ownership tracking, and Verminion details
-- Lets you favorite mounts and minions for quicker browsing
+- Supports search, source filtering, expansion filtering, and collection-state filtering
+- Lets you favorite entries for quicker browsing
 - Opens a detailed modal view for each collection entry
 - Links users to relevant external sources when available
 - Supports character sync so owned and missing entries can be highlighted in the UI
+- Keeps accessory ownership available locally on the device for manual tracking
 
 ## Current Features
 
-- Dynamic API-driven mount and minion lists
+- Dynamic API-driven collection lists
 - Search by name or source text
 - Source-type filtering
 - Expansion filtering from ARR through Dawntrail
@@ -27,7 +27,8 @@ It pulls live data from the public [FFXIV Collect](https://ffxivcollect.com/) AP
 - Favorites system stored locally
 - Character search and sync integration
 - Owned / missing collection filtering after sync
-- Mount and minion detail modals with richer information
+- Theme-aware card styling for mounts, minions, accessories, and achievements
+- Detail modals with richer source and ownership information
 - Minion Verminion stats and source details
 - Responsive layout for desktop and mobile
 
@@ -47,6 +48,7 @@ Character sync is handled through local API-style middleware in development/prev
 - refresh character data when possible
 - retrieve owned mount and minion data
 - compare synced ownership against the collection list in the app
+- support manual local ownership tracking for accessories
 
 ## Running Locally
 
@@ -62,11 +64,19 @@ npm install
 npm run dev
 ```
 
+## Scripts
+
+- `npm run dev` - start the Vite development server
+- `npm run build` - create a production build
+- `npm run lint` - run ESLint
+- `npm run preview` - preview the production build locally
+
 ## Project Notes
 
 - This is a personal hobby project built for learning, experimentation, and portfolio growth.
 - The UI and data handling are still evolving.
 - Some source linking is direct, while some links are inferred from available source data.
+- Card styling is intentionally theme-specific so each collection tab feels distinct.
 
 ## Disclaimer
 

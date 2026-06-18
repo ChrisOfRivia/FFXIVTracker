@@ -50,6 +50,10 @@ const COLLECTION_PAGES = {
     favoritesStorageKey: "ffxiv-accessory-tracker-favorites",
     pageClassName: "page-shell-accessories",
     cardClassName: "mount-card minion-card accessory-card",
+    emptyStateTutorial: {
+      imageSrc: "/tutorials/favoriteAccessory.png",
+      imageAlt: "Tutorial showing how to favorite an accessory",
+    },
     typeGroupVariant: "accessories",
   },
   achievements: {
@@ -63,6 +67,10 @@ const COLLECTION_PAGES = {
     favoritesStorageKey: "ffxiv-achievement-tracker-favorites",
     pageClassName: "page-shell-achievements",
     cardClassName: "mount-card achievement-card",
+    emptyStateTutorial: {
+      imageSrc: "/tutorials/favoriteAchievement.png",
+      imageAlt: "Tutorial showing how to favorite an achievement",
+    },
     typeGroupVariant: "achievements",
     ownershipLabel: "Earned by:",
     detailHashEnabled: true,
