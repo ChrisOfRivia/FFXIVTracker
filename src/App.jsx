@@ -38,6 +38,20 @@ const COLLECTION_PAGES = {
     },
     typeGroupVariant: "minions",
   },
+  accessories: {
+    key: "accessories",
+    title: "FFXIV Accessories Tracker",
+    singularLabel: "accessory",
+    pluralLabel: "accessories",
+    dataEndpoint: "https://ffxivcollect.com/api/fashions",
+    syncEndpoint: "/api/character-accessories",
+    characterStorageKey: "ffxiv-accessory-tracker-character-sync",
+    ownershipStorageKey: "ffxiv-accessory-tracker-owned-accessories",
+    favoritesStorageKey: "ffxiv-accessory-tracker-favorites",
+    pageClassName: "page-shell-accessories",
+    cardClassName: "mount-card minion-card accessory-card",
+    typeGroupVariant: "accessories",
+  },
   achievements: {
     key: "achievements",
     title: "FFXIV Achievement Tracker",
@@ -175,7 +189,8 @@ function HomePage({ showDisclaimer, onDismissDisclaimer }) {
         <p className="home-eyebrow">Final Fantasy XIV collection tracker</p>
         <h1>Start Tracking!</h1>
         <p className="home-copy">
-          Track mounts and minions with filters, favorites, and ownership sync.
+          Track mounts, minions, accessories, and achievements with filters,
+          favorites, and ownership sync.
         </p>
 
         <div className="home-route-grid">
@@ -203,6 +218,22 @@ function HomePage({ showDisclaimer, onDismissDisclaimer }) {
               a dedicated view.
             </p>
             <span className="home-route-card-cta">Open minions</span>
+          </a>
+
+          <a
+            className="home-route-card home-route-card-accessories"
+            href="#/accessories"
+          >
+            <span className="home-route-card-label">Accessories</span>
+            <div className="home-route-card-icon" aria-hidden="true">
+              <img src="/icons/crown.png" alt="" />
+            </div>
+            <h2>Accessory Tracker</h2>
+            <p>
+              Browse fashion accessories with the same compact card layout and
+              collection filters.
+            </p>
+            <span className="home-route-card-cta">Open accessories</span>
           </a>
 
           <a
@@ -235,6 +266,10 @@ function getCollectionNavLabel(pageKey) {
     return "Minions";
   }
 
+  if (pageKey === "accessories") {
+    return "Accessories";
+  }
+
   return "Achievements";
 }
 
@@ -247,6 +282,10 @@ function getRouteFromHash(hashValue) {
 
   if (normalizedHash === "minions") {
     return "minions";
+  }
+
+  if (normalizedHash === "accessories") {
+    return "accessories";
   }
 
   if (

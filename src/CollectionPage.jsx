@@ -260,6 +260,7 @@ const EMPTY_CHARACTER_SYNC_STATE = {
 
 function CollectionPage({ config }) {
   const typeGroups = getTypeGroups(config.typeGroupVariant);
+  const isAccessoryPage = config.typeGroupVariant === "accessories";
   const [mounts, setMounts] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedExpansions, setSelectedExpansions] = useState([]);
@@ -287,7 +288,14 @@ function CollectionPage({ config }) {
   const [isSearchingCharacters, setIsSearchingCharacters] = useState(false);
   const [isSyncingCharacter, setIsSyncingCharacter] = useState(false);
   const [characterSyncState, setCharacterSyncState] = useState(() =>
-    getStoredCharacterSyncState(config.characterStorageKey),
+    isAccessoryPage
+      ? EMPTY_CHARACTER_SYNC_STATE
+      : getStoredCharacterSyncState(config.characterStorageKey),
+  );
+  const [manualOwnedMountIds, setManualOwnedMountIds] = useState(() =>
+    isAccessoryPage
+      ? getStoredOwnedCollectableIds(config.ownershipStorageKey)
+      : [],
   );
   const [favoriteMountIds, setFavoriteMountIds] = useState(() =>
     getStoredFavoriteMountIds(config.favoritesStorageKey),
@@ -369,6 +377,10 @@ function CollectionPage({ config }) {
   }, []);
 
   useEffect(() => {
+    if (isAccessoryPage) {
+      return undefined;
+    }
+
     if (characterSyncState.character) {
       window.localStorage.setItem(
         config.characterStorageKey,
@@ -378,7 +390,28 @@ function CollectionPage({ config }) {
     }
 
     window.localStorage.removeItem(config.characterStorageKey);
-  }, [characterSyncState, config.characterStorageKey]);
+  }, [characterSyncState, config.characterStorageKey, isAccessoryPage]);
+
+  useEffect(() => {
+    if (!isAccessoryPage || !config.ownershipStorageKey) {
+      return undefined;
+    }
+
+    if (manualOwnedMountIds.length > 0) {
+      window.localStorage.setItem(
+        config.ownershipStorageKey,
+        JSON.stringify(manualOwnedMountIds),
+      );
+      return undefined;
+    }
+
+    window.localStorage.removeItem(config.ownershipStorageKey);
+    return undefined;
+  }, [
+    config.ownershipStorageKey,
+    isAccessoryPage,
+    manualOwnedMountIds,
+  ]);
 
   useEffect(() => {
     if (favoriteMountIds.length > 0) {
@@ -392,28 +425,45 @@ function CollectionPage({ config }) {
     window.localStorage.removeItem(config.favoritesStorageKey);
   }, [favoriteMountIds, config.favoritesStorageKey]);
 
-  const syncedCharacter = characterSyncState.character;
+  const syncedCharacter = isAccessoryPage ? null : characterSyncState.character;
+  const ownedSourceMountIds = isAccessoryPage
+    ? manualOwnedMountIds
+    : characterSyncState.ownedMountIds;
+  const ownedSourceMountNames = useMemo(
+    () => (isAccessoryPage ? [] : characterSyncState.ownedMountNames),
+    [characterSyncState.ownedMountNames, isAccessoryPage],
+  );
   const ownedMountIdSet = useMemo(
-    () => new Set(characterSyncState.ownedMountIds),
-    [characterSyncState.ownedMountIds],
+    () => new Set(ownedSourceMountIds),
+    [ownedSourceMountIds],
   );
   const ownedMountNameSet = useMemo(
-    () =>
-      new Set(
-        characterSyncState.ownedMountNames.map(normalizeMountOwnershipName),
-      ),
-    [characterSyncState.ownedMountNames],
+    () => new Set(ownedSourceMountNames.map(normalizeMountOwnershipName)),
+    [ownedSourceMountNames],
   );
   const favoriteMountIdSet = useMemo(
     () => new Set(favoriteMountIds),
     [favoriteMountIds],
   );
-  const ownedMountCount = characterSyncState.ownedMountIds.length;
+  const ownedMountCount = ownedSourceMountIds.length;
   const totalMountCount = mounts.length;
   const trimmedSearchQuery = searchQuery.trim();
   const normalizedSearchQuery = trimmedSearchQuery.toLowerCase();
   const initialRenderCount = getInitialRenderCount(config.typeGroupVariant);
   const renderBatchSize = getRenderBatchSize(config.typeGroupVariant);
+  const visibleTypeGroups = useMemo(() => {
+    if (!isAccessoryPage) {
+      return typeGroups;
+    }
+
+    return getVisibleTypeGroups(typeGroups, mounts, config);
+  }, [config, isAccessoryPage, mounts, typeGroups]);
+  const ownershipStateKey = isAccessoryPage
+    ? manualOwnedMountIds.join("|")
+    : [
+        characterSyncState.ownedMountIds.join("|"),
+        characterSyncState.ownedMountNames.join("|"),
+      ].join("|");
   const renderWindowKey = [
     config.typeGroupVariant,
     mounts.length,
@@ -423,8 +473,7 @@ function CollectionPage({ config }) {
     ownedFilter,
     showFavoritesOnly ? "favorites" : "all",
     favoriteMountIds.join("|"),
-    characterSyncState.ownedMountIds.join("|"),
-    characterSyncState.ownedMountNames.join("|"),
+    ownershipStateKey,
   ].join("::");
 
   const filteredMounts = useMemo(() => {
@@ -543,8 +592,9 @@ function CollectionPage({ config }) {
     showFavoritesOnly &&
     favoriteMountIds.length > 0 &&
     filteredMounts.length === 0;
+  const showOwnershipControls = isAccessoryPage || Boolean(syncedCharacter);
   const showOwnedEmptyState =
-    syncedCharacter &&
+    showOwnershipControls &&
     ownedFilter === "owned" &&
     ownedMountCount === 0 &&
     filteredMounts.length === 0 &&
@@ -589,11 +639,37 @@ function CollectionPage({ config }) {
   }
 
   function openCharacterSyncModal() {
+    if (isAccessoryPage) {
+      return;
+    }
+
     setCharacterForm(DEFAULT_CHARACTER_FORM);
     setCharacterResults([]);
     setCharacterStatus({ tone: "idle", message: "" });
     setCharacterPanelStatus({ tone: "idle", message: "" });
     setShowCharacterSync(true);
+  }
+
+  function toggleManualMountOwnership(mountId) {
+    if (!isAccessoryPage) {
+      return;
+    }
+
+    setManualOwnedMountIds((currentIds) => {
+      if (currentIds.includes(mountId)) {
+        return currentIds.filter((id) => id !== mountId);
+      }
+
+      return [...currentIds, mountId];
+    });
+  }
+
+  function clearManualOwnership() {
+    if (!isAccessoryPage) {
+      return;
+    }
+
+    setManualOwnedMountIds([]);
   }
 
   function handleCharacterFieldChange(field, value) {
@@ -721,18 +797,30 @@ function CollectionPage({ config }) {
         );
       }
 
+      const ownedMountIds = payload.ownedMountIds || [];
+      const ownedMountNames = payload.ownedMountNames || [];
+      const ownedCount = ownedMountIds.length;
+      const isAccessorySync = config.typeGroupVariant === "accessories";
+
       setCharacterSyncState({
         character,
-        ownedMountIds: payload.ownedMountIds || [],
-        ownedMountNames: payload.ownedMountNames || [],
+        ownedMountIds,
+        ownedMountNames,
       });
       setCharacterStatus({
         tone: "success",
-        message: `${character.name} synced successfully.`,
+        message:
+          isAccessorySync && ownedCount === 0
+            ? `${character.name} synced successfully, but FFXIV Collect returned no accessory ownership.`
+            : `${character.name} synced successfully.`,
       });
       setCharacterPanelStatus({
-        tone: "success",
-        message: `${character.name} refreshed: ${(payload.ownedMountIds || []).length}/${totalMountCount} ${config.pluralLabel} owned.`,
+        tone: isAccessorySync && ownedCount === 0 ? "muted" : "success",
+        message:
+          `${character.name} refreshed: ${ownedCount}/${totalMountCount} ${config.pluralLabel} owned.` +
+          (isAccessorySync && ownedCount === 0
+            ? " FFXIV Collect currently returns no accessory ownership for this character."
+            : ""),
       });
 
       if (closeModal) {
@@ -899,9 +987,11 @@ function CollectionPage({ config }) {
                   <div className="mount-detail-owned">
                     {config.ownershipLabel || "Owned by:"}{" "}
                     <strong>{selectedMount.owned}</strong>
-                    {syncedCharacter ? (
+                    {showOwnershipControls ? (
                       <p className="mount-detail-character-status">
-                        {syncedCharacter.name}:{" "}
+                        {isAccessoryPage
+                          ? "Manual ownership on this device: "
+                          : `${syncedCharacter.name}: `}
                         <strong>
                           {isMountOwned(
                             selectedMount,
@@ -909,10 +999,47 @@ function CollectionPage({ config }) {
                             ownedMountIdSet,
                             ownedMountNameSet,
                           )
-                            ? "Owned"
-                            : "Missing"}
+                            ? isAccessoryPage
+                              ? "Owned locally"
+                              : "Owned"
+                            : isAccessoryPage
+                              ? "Missing locally"
+                              : "Missing"}
                         </strong>
                       </p>
+                    ) : null}
+                    {isAccessoryPage ? (
+                      <button
+                        className={
+                          isMountOwned(
+                            selectedMount,
+                            syncedCharacter,
+                            ownedMountIdSet,
+                            ownedMountNameSet,
+                          )
+                            ? "mount-manual-owned-button active"
+                            : "mount-manual-owned-button"
+                        }
+                        type="button"
+                        onClick={() =>
+                          toggleManualMountOwnership(selectedMount.id)
+                        }
+                        aria-pressed={isMountOwned(
+                          selectedMount,
+                          syncedCharacter,
+                          ownedMountIdSet,
+                          ownedMountNameSet,
+                        )}
+                      >
+                        {isMountOwned(
+                          selectedMount,
+                          syncedCharacter,
+                          ownedMountIdSet,
+                          ownedMountNameSet,
+                        )
+                          ? "Mark Missing"
+                          : "Mark Owned"}
+                      </button>
                     ) : null}
                   </div>
 
@@ -1060,17 +1187,17 @@ function CollectionPage({ config }) {
                                     ? undefined
                                     : "_blank"
                                 }
-                                rel={
+                              rel={
                                   primarySourceLink.external === false
                                     ? undefined
                                     : "noreferrer"
                                 }
                               >
-                                {source.text}
+                                {getSourceDisplayText(source)}
                               </a>
                             ) : (
                               <p className="mount-detail-source-copy">
-                                {source.text}
+                                {getSourceDisplayText(source)}
                               </p>
                             )}
 
@@ -1109,7 +1236,7 @@ function CollectionPage({ config }) {
         </div>
       ) : null}
 
-      {showCharacterSync ? (
+      {!isAccessoryPage && showCharacterSync ? (
         <div
           className="character-sync-overlay"
           role="dialog"
@@ -1151,6 +1278,13 @@ function CollectionPage({ config }) {
                 settings are private, some {config.pluralLabel} may not show as
                 owned until those settings are made public there.
               </p>
+              {config.typeGroupVariant === "accessories" ? (
+                <p className="character-sync-warning">
+                  Fashion accessory ownership is not consistently exposed by
+                  FFXIV Collect yet, so this sync may still return no owned
+                  accessories even after a successful search.
+                </p>
+              ) : null}
             </div>
 
             <form
@@ -1274,7 +1408,15 @@ function CollectionPage({ config }) {
 
       <div className={`page-shell ${config.pageClassName}`}>
         <header className="page-header">
-          {syncedCharacter ? (
+          {isAccessoryPage ? (
+            <div className="page-header-copy page-header-copy-unsynced">
+              <h1>{config.title}</h1>
+              <p className="page-header-character page-header-character-muted">
+                Mark accessories you own manually. {ownedMountCount}/
+                {totalMountCount} {config.pluralLabel} owned on this device.
+              </p>
+            </div>
+          ) : syncedCharacter ? (
             <div className="page-header-row">
               <div className="page-header-spacer" aria-hidden="true" />
 
@@ -1380,79 +1522,163 @@ function CollectionPage({ config }) {
                 <div className="filter-heading">
                   <h3>Collection</h3>
                 </div>
-                <div
-                  className={
-                    syncedCharacter
-                      ? "collection-filter-actions"
-                      : "collection-filter-actions collection-filter-actions-single"
-                  }
-                >
-                  {syncedCharacter ? (
+                {isAccessoryPage ? (
+                  <p className="collection-filter-note">
+                    Manual ownership is saved locally on this device.
+                  </p>
+                ) : null}
+                {isAccessoryPage ? (
+                  <div className="collection-filter-accessory-group">
+                    <div className="collection-filter-actions collection-filter-actions-accessories">
+                      <button
+                        className={
+                          ownedFilter === "owned"
+                            ? "collection-filter-button active"
+                            : "collection-filter-button"
+                        }
+                        onClick={() =>
+                          setOwnedFilter((currentValue) =>
+                            currentValue === "owned" ? "all" : "owned",
+                          )
+                        }
+                        title={`Show owned ${config.pluralLabel}`}
+                        aria-label={`Show owned ${config.pluralLabel}`}
+                        aria-pressed={ownedFilter === "owned"}
+                        type="button"
+                      >
+                        <span
+                          className="collection-filter-icon collection-filter-icon-owned"
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <button
+                        className={
+                          ownedFilter === "unowned"
+                            ? "collection-filter-button active"
+                            : "collection-filter-button"
+                        }
+                        onClick={() =>
+                          setOwnedFilter((currentValue) =>
+                            currentValue === "unowned" ? "all" : "unowned",
+                          )
+                        }
+                        title={`Show missing ${config.pluralLabel}`}
+                        aria-label={`Show missing ${config.pluralLabel}`}
+                        aria-pressed={ownedFilter === "unowned"}
+                        type="button"
+                      >
+                        <span
+                          className="collection-filter-icon collection-filter-icon-unowned"
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <button
+                        className={
+                          showFavoritesOnly
+                            ? "collection-filter-button active"
+                            : "collection-filter-button"
+                        }
+                        onClick={() =>
+                          setShowFavoritesOnly((currentValue) => !currentValue)
+                        }
+                        title={`Show favorite ${config.pluralLabel}`}
+                        aria-label={`Show favorite ${config.pluralLabel}`}
+                        aria-pressed={showFavoritesOnly}
+                        type="button"
+                      >
+                        <span
+                          className="collection-filter-icon collection-filter-icon-favorite"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+
                     <button
-                      className={
-                        ownedFilter === "owned"
-                          ? "collection-filter-button active"
-                          : "collection-filter-button"
-                      }
-                      onClick={() =>
-                        setOwnedFilter((currentValue) =>
-                          currentValue === "owned" ? "all" : "owned",
-                        )
-                      }
-                      title={`Show owned ${config.pluralLabel}`}
-                      aria-label={`Show owned ${config.pluralLabel}`}
-                      aria-pressed={ownedFilter === "owned"}
+                      className="collection-filter-clear-owned-button"
+                      onClick={clearManualOwnership}
+                      title="Clear all manual ownership"
+                      aria-label="Clear all manual ownership"
                       type="button"
+                      disabled={manualOwnedMountIds.length === 0}
                     >
-                      <span
-                        className="collection-filter-icon collection-filter-icon-owned"
-                        aria-hidden="true"
-                      />
+                      Clear Owned
                     </button>
-                  ) : null}
-                  {syncedCharacter ? (
-                    <button
-                      className={
-                        ownedFilter === "unowned"
-                          ? "collection-filter-button active"
-                          : "collection-filter-button"
-                      }
-                      onClick={() =>
-                        setOwnedFilter((currentValue) =>
-                          currentValue === "unowned" ? "all" : "unowned",
-                        )
-                      }
-                      title={`Show missing ${config.pluralLabel}`}
-                      aria-label={`Show missing ${config.pluralLabel}`}
-                      aria-pressed={ownedFilter === "unowned"}
-                      type="button"
-                    >
-                      <span
-                        className="collection-filter-icon collection-filter-icon-unowned"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  ) : null}
-                  <button
+                  </div>
+                ) : (
+                  <div
                     className={
-                      showFavoritesOnly
-                        ? "collection-filter-button active"
-                        : "collection-filter-button"
+                      showOwnershipControls
+                        ? "collection-filter-actions"
+                        : "collection-filter-actions collection-filter-actions-single"
                     }
-                    onClick={() =>
-                      setShowFavoritesOnly((currentValue) => !currentValue)
-                    }
-                    title={`Show favorite ${config.pluralLabel}`}
-                    aria-label={`Show favorite ${config.pluralLabel}`}
-                    aria-pressed={showFavoritesOnly}
-                    type="button"
                   >
-                    <span
-                      className="collection-filter-icon collection-filter-icon-favorite"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
+                    {showOwnershipControls ? (
+                      <button
+                        className={
+                          ownedFilter === "owned"
+                            ? "collection-filter-button active"
+                            : "collection-filter-button"
+                        }
+                        onClick={() =>
+                          setOwnedFilter((currentValue) =>
+                            currentValue === "owned" ? "all" : "owned",
+                          )
+                        }
+                        title={`Show owned ${config.pluralLabel}`}
+                        aria-label={`Show owned ${config.pluralLabel}`}
+                        aria-pressed={ownedFilter === "owned"}
+                        type="button"
+                      >
+                        <span
+                          className="collection-filter-icon collection-filter-icon-owned"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    ) : null}
+                    {showOwnershipControls ? (
+                      <button
+                        className={
+                          ownedFilter === "unowned"
+                            ? "collection-filter-button active"
+                            : "collection-filter-button"
+                        }
+                        onClick={() =>
+                          setOwnedFilter((currentValue) =>
+                            currentValue === "unowned" ? "all" : "unowned",
+                          )
+                        }
+                        title={`Show missing ${config.pluralLabel}`}
+                        aria-label={`Show missing ${config.pluralLabel}`}
+                        aria-pressed={ownedFilter === "unowned"}
+                        type="button"
+                      >
+                        <span
+                          className="collection-filter-icon collection-filter-icon-unowned"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    ) : null}
+                    <button
+                      className={
+                        showFavoritesOnly
+                          ? "collection-filter-button active"
+                          : "collection-filter-button"
+                      }
+                      onClick={() =>
+                        setShowFavoritesOnly((currentValue) => !currentValue)
+                      }
+                      title={`Show favorite ${config.pluralLabel}`}
+                      aria-label={`Show favorite ${config.pluralLabel}`}
+                      aria-pressed={showFavoritesOnly}
+                      type="button"
+                    >
+                      <span
+                        className="collection-filter-icon collection-filter-icon-favorite"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="filter-group">
@@ -1472,7 +1698,7 @@ function CollectionPage({ config }) {
                   </button>
                 </div>
                 <div className="type-filters">
-                  {typeGroups.map((group) => (
+                  {visibleTypeGroups.map((group) => (
                     <div key={group.label} className="type-category">
                       <p className="type-category-title">{group.label}</p>
 
@@ -1580,8 +1806,9 @@ function CollectionPage({ config }) {
               <div className="mount-empty-state">
                 <h2>No {config.pluralLabel} owned yet</h2>
                 <p>
-                  This character does not have any synced {config.pluralLabel}{" "}
-                  yet. Happy collecting!
+                  {isAccessoryPage
+                    ? "Use the manual owned buttons on the cards to mark the accessories you have on this device."
+                    : `This character does not have any synced ${config.pluralLabel} yet. Happy collecting!`}
                 </p>
               </div>
             ) : null}
@@ -1634,7 +1861,7 @@ function CollectionPage({ config }) {
                       <h4>
                         {config.ownershipLabel || "Owned by:"} {mount.owned}
                       </h4>
-                      {syncedCharacter ? (
+                      {showOwnershipControls ? (
                         <p className="mount-character-status">
                           {isMountOwned(
                             mount,
@@ -1642,9 +1869,47 @@ function CollectionPage({ config }) {
                             ownedMountIdSet,
                             ownedMountNameSet,
                           )
-                            ? "Owned"
-                            : "Missing"}
+                            ? isAccessoryPage
+                              ? "Owned locally"
+                              : "Owned"
+                            : isAccessoryPage
+                              ? "Missing locally"
+                              : "Missing"}
                         </p>
+                      ) : null}
+                      {isAccessoryPage ? (
+                        <button
+                          className={
+                            isMountOwned(
+                              mount,
+                              syncedCharacter,
+                              ownedMountIdSet,
+                              ownedMountNameSet,
+                            )
+                              ? "mount-manual-owned-button active"
+                              : "mount-manual-owned-button"
+                          }
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleManualMountOwnership(mount.id);
+                          }}
+                          aria-pressed={isMountOwned(
+                            mount,
+                            syncedCharacter,
+                            ownedMountIdSet,
+                            ownedMountNameSet,
+                          )}
+                        >
+                          {isMountOwned(
+                            mount,
+                            syncedCharacter,
+                            ownedMountIdSet,
+                            ownedMountNameSet,
+                          )
+                            ? "Mark Missing"
+                            : "Mark Owned"}
+                        </button>
                       ) : null}
                     </div>
 
@@ -1658,7 +1923,7 @@ function CollectionPage({ config }) {
                         aria-hidden="true"
                       />
                       <p className="source-text">
-                        {getCollectableSourceText(mount, config)}
+                        {getCollectableSourceDisplayText(mount, config)}
                       </p>
                     </div>
                   </div>
@@ -1702,6 +1967,10 @@ function getTypeGroups(typeGroupVariant) {
     return MINION_TYPE_GROUPS;
   }
 
+  if (typeGroupVariant === "accessories") {
+    return MINION_TYPE_GROUPS;
+  }
+
   if (typeGroupVariant === "achievements") {
     return ACHIEVEMENT_TYPE_GROUPS;
   }
@@ -1728,6 +1997,10 @@ function getRenderBatchSize(typeGroupVariant) {
 function getDetailCardClassName(typeGroupVariant) {
   if (typeGroupVariant === "minions") {
     return "mount-detail-card minion-detail-card";
+  }
+
+  if (typeGroupVariant === "accessories") {
+    return "mount-detail-card minion-detail-card accessory-detail-card";
   }
 
   if (typeGroupVariant === "achievements") {
@@ -1767,6 +2040,16 @@ function getCollectableSourceText(collectable, config) {
   }
 
   return getPrimarySource(collectable).text;
+}
+
+function getCollectableSourceDisplayText(collectable, config) {
+  if (config.typeGroupVariant === "achievements") {
+    return (
+      collectable.category?.name || collectable.description || "Achievement"
+    );
+  }
+
+  return getSourceDisplayText(getPrimarySource(collectable));
 }
 
 function getCollectableImage(collectable) {
@@ -1974,6 +2257,10 @@ function getSourceLinkPriority(source) {
     return [getMogstationSourceLink];
   }
 
+  if (source.type === "Event") {
+    return [getWikiSourceLink];
+  }
+
   if (isCosmicFortuneSource(source) || isMechPilotRewardSource(source)) {
     return [getWikiSourceLink, getVendorSourceLink];
   }
@@ -1998,7 +2285,7 @@ function getSourceLinkPriority(source) {
 }
 
 function getWikiTitle(source) {
-  const sourceText = source.text?.trim();
+  const sourceText = getSourceDisplayText(source);
 
   if (!sourceText || sourceText === "Unknown source") {
     return null;
@@ -2008,6 +2295,22 @@ function getWikiTitle(source) {
 
   if (normalizedWikiTitle) {
     return normalizedWikiTitle;
+  }
+
+  return sourceText;
+}
+
+function getSourceDisplayText(source) {
+  const sourceText = source.text?.trim();
+
+  if (!sourceText) {
+    return "Unknown source";
+  }
+
+  if (source.type === "Event") {
+    const strippedEventText = sourceText.replace(/\s+Event$/, "").trim();
+
+    return strippedEventText || sourceText;
   }
 
   return sourceText;
@@ -2235,6 +2538,22 @@ function getGarlandCurrencyName(source) {
   return null;
 }
 
+function getVisibleTypeGroups(typeGroups, collectables, config) {
+  return typeGroups
+    .map((group) => {
+      const visibleTypes = group.types.filter((type) =>
+        collectables.some(
+          (collectable) => getCollectableType(collectable, config) === type,
+        ),
+      );
+
+      return visibleTypes.length > 0
+        ? { ...group, types: visibleTypes }
+        : null;
+    })
+    .filter(Boolean);
+}
+
 function normalizeGarlandCurrencyName(currencyName) {
   const trimmedCurrencyName = currencyName.trim();
   const normalizedCurrencyName =
@@ -2339,6 +2658,30 @@ function getStoredFavoriteMountIds(storageKey) {
   }
 }
 
+function getStoredOwnedCollectableIds(storageKey) {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  try {
+    const storedValue = window.localStorage.getItem(storageKey);
+
+    if (!storedValue) {
+      return [];
+    }
+
+    const parsedValue = JSON.parse(storedValue);
+
+    return Array.isArray(parsedValue)
+      ? parsedValue
+          .map((value) => Number(value))
+          .filter((value) => Number.isFinite(value))
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function getRegionLabel(regionCode) {
   return (
     REGIONS.find((region) => region.code === regionCode)?.label ||
@@ -2357,9 +2700,7 @@ function isMountOwned(
   ownedMountIdSet,
   ownedMountNameSet,
 ) {
-  if (!syncedCharacter) {
-    return false;
-  }
+  void syncedCharacter;
 
   return (
     ownedMountIdSet.has(mount.id) ||
@@ -2374,9 +2715,7 @@ function getMountCardClassName(
   ownedMountNameSet,
   cardClassName,
 ) {
-  if (!syncedCharacter) {
-    return cardClassName;
-  }
+  void syncedCharacter;
 
   return isMountOwned(
     mount,

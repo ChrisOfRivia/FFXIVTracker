@@ -1,4 +1,10 @@
-import { getOwnedAchievements, getOwnedMinions, getOwnedMounts, searchCharacters } from "./characterSync.js"
+import {
+  getOwnedAccessories,
+  getOwnedAchievements,
+  getOwnedMinions,
+  getOwnedMounts,
+  searchCharacters,
+} from "./characterSync.js"
 
 export function createCharacterSyncMiddleware() {
   return async function characterSyncMiddleware(req, res, next) {
@@ -49,6 +55,22 @@ export function createCharacterSyncMiddleware() {
         sendJson(res, 200, {
           ownedMountIds: ownedMinions.map((minion) => minion.id).filter(Boolean),
           ownedMountNames: ownedMinions.map((minion) => minion.name).filter(Boolean),
+        })
+        return
+      }
+
+      if (requestUrl.pathname === "/api/character-accessories") {
+        const id = requestUrl.searchParams.get("id")
+
+        if (!id) {
+          sendJson(res, 400, { error: "Character id is required." })
+          return
+        }
+
+        const ownedAccessories = await getOwnedAccessories(id)
+        sendJson(res, 200, {
+          ownedMountIds: ownedAccessories.map((accessory) => accessory.id).filter(Boolean),
+          ownedMountNames: ownedAccessories.map((accessory) => accessory.name).filter(Boolean),
         })
         return
       }

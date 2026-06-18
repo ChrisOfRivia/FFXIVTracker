@@ -56,6 +56,10 @@ export async function getOwnedMinions(characterId) {
   return getOwnedCollectableEntries(characterId, "minions")
 }
 
+export async function getOwnedAccessories(characterId) {
+  return getOwnedCollectableEntries(characterId, "fashions")
+}
+
 export async function getOwnedAchievements(characterId) {
   return getOwnedCollectableEntries(characterId, "achievements")
 }
