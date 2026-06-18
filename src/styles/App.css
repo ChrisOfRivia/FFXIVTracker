@@ -1671,25 +1671,26 @@ html:has(.page-shell-achievements) .character-sync-warning a::after {
 }
 
 html:has(.page-shell-mounts) .mount-detail-card {
-  border-color: rgba(139, 198, 255, 0.18);
+  border-color: rgba(139, 198, 255, 0.26);
   background:
     radial-gradient(
       circle at top left,
-      rgba(139, 198, 255, 0.14) 0%,
-      rgba(139, 198, 255, 0) 30%
+      rgba(139, 198, 255, 0.2) 0%,
+      rgba(139, 198, 255, 0) 28%
     ),
     radial-gradient(
-      circle at bottom right,
-      rgba(243, 195, 108, 0.05) 0%,
-      rgba(243, 195, 108, 0) 20%
+      circle at top right,
+      rgba(190, 226, 255, 0.08) 0%,
+      rgba(190, 226, 255, 0) 24%
     ),
     linear-gradient(
       180deg,
-      rgba(30, 36, 48, 0.98) 0%,
-      rgba(16, 18, 24, 0.99) 100%
+      rgba(22, 30, 42, 0.98) 0%,
+      rgba(12, 16, 24, 0.99) 100%
     );
   box-shadow:
-    inset 0 0 0 1px rgba(139, 198, 255, 0.05),
+    inset 0 0 0 1px rgba(139, 198, 255, 0.1),
+    inset 0 1px 0 rgba(190, 226, 255, 0.16),
     0 30px 80px rgba(0, 0, 0, 0.42);
 }
 
@@ -2672,14 +2673,24 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   background:
     radial-gradient(
       circle at top,
-      rgba(139, 198, 255, 0.12) 0%,
-      rgba(139, 198, 255, 0) 26%
+      rgba(139, 198, 255, 0.18) 0%,
+      rgba(139, 198, 255, 0) 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(114, 168, 255, 0.06) 0%,
+      rgba(114, 168, 255, 0) 24%
     ),
     linear-gradient(180deg, #232d3d 0%, #171c25 100%);
-  border: 1px solid rgba(139, 198, 255, 0.09);
+  border: 1px solid rgba(139, 198, 255, 0.18);
   box-shadow:
-    inset 0 0 0 1px rgba(139, 198, 255, 0.05),
-    0 12px 24px rgba(0, 0, 0, 0.2);
+    inset 0 0 0 1px rgba(139, 198, 255, 0.08),
+    inset 0 1px 0 rgba(190, 226, 255, 0.12),
+    0 16px 30px rgba(0, 0, 0, 0.26);
+  --card-frame-outer: rgba(191, 223, 255, 0.96);
+  --card-frame-inner: rgba(93, 139, 196, 0.92);
+  --card-frame-accent: rgba(245, 250, 255, 0.95);
+  --card-frame-shadow: rgba(139, 198, 255, 0.24);
 }
 
 .page-shell-mounts .mount-card {
@@ -2692,50 +2703,52 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   background:
     radial-gradient(
       circle at top,
-      rgba(111, 184, 95, 0.18) 0%,
-      rgba(111, 184, 95, 0) 30%
+      rgba(111, 184, 95, 0.22) 0%,
+      rgba(111, 184, 95, 0) 32%
     ),
     radial-gradient(
       circle at top left,
-      rgba(139, 198, 255, 0.08) 0%,
-      rgba(139, 198, 255, 0) 26%
+      rgba(139, 198, 255, 0.1) 0%,
+      rgba(139, 198, 255, 0) 28%
     ),
     linear-gradient(180deg, #223228 0%, #151c1b 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(136, 214, 126, 0.34),
-    inset 0 0 0 2px rgba(139, 198, 255, 0.08),
-    0 12px 24px rgba(0, 0, 0, 0.2);
+    inset 0 0 0 1px rgba(136, 214, 126, 0.4),
+    inset 0 0 0 2px rgba(139, 198, 255, 0.12),
+    inset 0 1px 0 rgba(190, 226, 255, 0.1),
+    0 16px 30px rgba(0, 0, 0, 0.28);
 }
 
 .page-shell-mounts .mount-card::before {
-  width: calc(132px * var(--ui-scale));
-  height: calc(96px * var(--ui-scale));
+  width: calc(146px * var(--ui-scale));
+  height: calc(110px * var(--ui-scale));
   background: radial-gradient(
     circle,
-    rgba(139, 198, 255, 0.08) 0%,
+    rgba(139, 198, 255, 0.14) 0%,
     rgba(139, 198, 255, 0) 72%
   );
-  opacity: 0.18;
+  opacity: 0.26;
 }
 
 .page-shell-mounts .mount-card-owned::before {
   background: radial-gradient(
     circle,
-    rgba(136, 214, 126, 0.16) 0%,
+    rgba(136, 214, 126, 0.22) 0%,
     rgba(136, 214, 126, 0) 72%
   );
-  opacity: 0.55;
+  opacity: 0.72;
 }
 
 .page-shell-mounts .mount-card:hover {
   box-shadow:
-    inset 0 0 0 1px rgba(139, 198, 255, 0.1),
-    0 16px 28px rgba(0, 0, 0, 0.24);
+    inset 0 0 0 1px rgba(139, 198, 255, 0.14),
+    inset 0 1px 0 rgba(190, 226, 255, 0.16),
+    0 20px 36px rgba(0, 0, 0, 0.3);
 }
 
 .page-shell-mounts .mount-card h2 {
   color: #eaf5ff;
-  text-shadow: 0 1px 0 rgba(8, 16, 28, 0.75);
+  text-shadow: 0 1px 0 rgba(8, 16, 28, 0.82);
 }
 
 .page-shell-mounts .mount-card h2::before,
@@ -2751,7 +2764,7 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 }
 
 .page-shell-mounts .mount-character-status {
-  color: #b8d7ff;
+  color: #c1ddff;
 }
 
 .page-shell-mounts .mount-owned h4 {
@@ -2763,13 +2776,13 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 }
 
 .page-shell-mounts .source-text {
-  color: #d8e8f7;
+  color: #e2eefb;
 }
 
 .page-shell-mounts .mount-card-favorite {
-  background: rgba(139, 198, 255, 0.12);
-  border-color: rgba(139, 198, 255, 0.22);
-  color: rgba(159, 208, 255, 0.95);
+  background: rgba(139, 198, 255, 0.16);
+  border-color: rgba(190, 226, 255, 0.26);
+  color: rgba(210, 233, 255, 0.98);
 }
 
 .page-shell-minions {
@@ -3214,6 +3227,11 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
   box-sizing: border-box;
   padding: calc(16px * var(--ui-scale));
   border-radius: calc(16px * var(--ui-scale));
+  --card-frame-outer: rgba(255, 233, 174, 0.94);
+  --card-frame-inner: rgba(152, 46, 32, 0.88);
+  --card-frame-accent: rgba(255, 245, 205, 0.94);
+  --card-frame-gem: rgba(255, 226, 154, 0.96);
+  --card-frame-shadow: rgba(248, 214, 137, 0.2);
 }
 
 .achievement-card::before {
@@ -3226,15 +3244,6 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
     rgba(255, 224, 142, 0) 72%
   );
   opacity: 0.55;
-}
-
-.achievement-card::after {
-  content: "";
-  position: absolute;
-  inset: calc(7px * var(--ui-scale));
-  border: 2px dashed rgba(109, 53, 33, 0.42);
-  border-radius: calc(8px * var(--ui-scale));
-  pointer-events: none;
 }
 
 .achievement-card.mount-card-owned {
@@ -3324,16 +3333,22 @@ html:has(.page-shell-mounts) .mount-detail-source-pill:hover {
 
 .achievement-detail-card {
   width: min(calc(680px * var(--ui-scale)), 100%);
-  border-color: rgba(248, 214, 137, 0.34);
+  border-color: rgba(255, 224, 142, 0.4);
   background:
     radial-gradient(
       circle at top,
-      rgba(248, 214, 137, 0.18) 0%,
-      rgba(248, 214, 137, 0) 28%
+      rgba(248, 214, 137, 0.22) 0%,
+      rgba(248, 214, 137, 0) 26%
     ),
-    linear-gradient(180deg, #71180f 0%, #350b08 100%);
+    radial-gradient(
+      circle at top right,
+      rgba(188, 45, 32, 0.18) 0%,
+      rgba(188, 45, 32, 0) 24%
+    ),
+    linear-gradient(180deg, #7a1b12 0%, #350b08 100%);
   box-shadow:
-    inset 0 0 0 2px rgba(255, 224, 142, 0.12),
+    inset 0 0 0 2px rgba(255, 224, 142, 0.16),
+    inset 0 1px 0 rgba(255, 238, 190, 0.28),
     0 30px 80px rgba(0, 0, 0, 0.48);
   color: #ffe6a8;
 }
@@ -4083,6 +4098,26 @@ html:has(.page-shell-accessories) .page-header-character-muted {
   color: #eef7ff;
 }
 
+.page-shell-accessories .search-input {
+  padding-inline: calc(10px * var(--ui-scale));
+  font-size: 0.93rem;
+  letter-spacing: 0.01em;
+}
+
+.page-shell-achievements .search-input {
+  padding-inline: calc(10px * var(--ui-scale));
+  font-size: 0.93rem;
+  letter-spacing: 0.01em;
+}
+
+.page-shell-accessories .search-input::placeholder {
+  font-size: 0.93rem;
+}
+
+.page-shell-achievements .search-input::placeholder {
+  font-size: 0.93rem;
+}
+
 .page-shell-mounts .search-input::placeholder {
   color: #9fb7ce;
 }
@@ -4381,6 +4416,7 @@ html:has(.page-shell-accessories) .page-header-character-muted {
 
 .mount-card {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   background-color: #2a2a2a;
   border-radius: calc(16px * var(--ui-scale));
@@ -4435,6 +4471,38 @@ html:has(.page-shell-accessories) .page-header-character-muted {
   pointer-events: none;
 }
 
+.collectable-card-frame {
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+}
+
+.collectable-card-frame-outer {
+  fill: none;
+  stroke: var(--card-frame-shadow);
+  stroke-width: 2;
+  opacity: 0.38;
+  vector-effect: non-scaling-stroke;
+}
+
+.collectable-card-frame-inner {
+  fill: none;
+  stroke: var(--card-frame-inner);
+  stroke-width: 1.1;
+  opacity: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.mount-card > :not(.collectable-card-frame) {
+  position: relative;
+  z-index: 1;
+}
+
 .minion-card {
   width: 100%;
   min-width: 0;
@@ -4452,6 +4520,11 @@ html:has(.page-shell-accessories) .page-header-character-muted {
     inset 0 0 0 1px rgba(113, 62, 29, 0.34),
     inset 0 1px 0 rgba(255, 224, 178, 0.22),
     0 14px 24px rgba(0, 0, 0, 0.2);
+  --card-frame-outer: rgba(255, 236, 193, 0.9);
+  --card-frame-inner: rgba(166, 103, 53, 0.82);
+  --card-frame-accent: rgba(255, 243, 220, 0.9);
+  --card-frame-gem: rgba(255, 226, 171, 0.94);
+  --card-frame-shadow: rgba(243, 195, 108, 0.2);
 }
 
 .page-shell-minions .mount-grid {
@@ -4470,13 +4543,14 @@ html:has(.page-shell-accessories) .page-header-character-muted {
   opacity: 0.55;
 }
 
-.minion-card::after {
+.page-shell-minions .minion-card::after {
   content: "";
   position: absolute;
   inset: calc(7px * var(--ui-scale));
-  border: 2px dashed rgba(95, 46, 18, 0.42);
-  border-radius: calc(8px * var(--ui-scale));
+  border: 2px dashed rgba(95, 46, 18, 0.34);
+  border-radius: calc(10px * var(--ui-scale));
   pointer-events: none;
+  opacity: 0.72;
 }
 
 .minion-card.mount-card-owned {
@@ -4581,6 +4655,11 @@ html:has(.page-shell-accessories) .page-header-character-muted {
     inset 0 0 0 1px rgba(208, 194, 255, 0.18),
     inset 0 1px 0 rgba(244, 238, 255, 0.14),
     0 14px 24px rgba(0, 0, 0, 0.22);
+  --card-frame-outer: rgba(229, 222, 255, 0.92);
+  --card-frame-inner: rgba(145, 108, 212, 0.84);
+  --card-frame-accent: rgba(247, 243, 255, 0.94);
+  --card-frame-gem: rgba(228, 218, 255, 0.96);
+  --card-frame-shadow: rgba(187, 163, 247, 0.2);
 }
 
 .page-shell-accessories .minion-card::before {
@@ -4590,10 +4669,6 @@ html:has(.page-shell-accessories) .page-header-character-muted {
     rgba(208, 194, 255, 0) 72%
   );
   opacity: 0.6;
-}
-
-.page-shell-accessories .minion-card::after {
-  border-color: rgba(208, 194, 255, 0.36);
 }
 
 .page-shell-accessories .minion-card.mount-card-owned {

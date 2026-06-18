@@ -258,6 +258,38 @@ const EMPTY_CHARACTER_SYNC_STATE = {
   ownedMountNames: [],
 };
 
+function CollectableCardFrame() {
+  return (
+    <svg
+      className="collectable-card-frame"
+      viewBox="0 0 100 140"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect
+        className="collectable-card-frame-outer"
+        x="1.25"
+        y="1.25"
+        width="97.5"
+        height="137.5"
+        rx="7.5"
+        ry="7.5"
+      />
+      <rect
+        className="collectable-card-frame-inner"
+        x="4.5"
+        y="4.5"
+        width="91"
+        height="131"
+        rx="5.5"
+        ry="5.5"
+      />
+
+    </svg>
+  );
+}
+
 function CollectionPage({ config }) {
   const typeGroups = getTypeGroups(config.typeGroupVariant);
   const isAccessoryPage = config.typeGroupVariant === "accessories";
@@ -1837,6 +1869,7 @@ function CollectionPage({ config }) {
                       }
                     }}
                   >
+                    <CollectableCardFrame />
                     {favoriteMountIdSet.has(mount.id) ? (
                       <span
                         className="mount-card-favorite"
